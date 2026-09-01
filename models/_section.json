@@ -50,7 +50,9 @@
         "hero",
         "cards",
         "columns",
-        "fragment"
+        "fragment",
+        "page-details",
+        "related-article"
       ]
     }
   ]

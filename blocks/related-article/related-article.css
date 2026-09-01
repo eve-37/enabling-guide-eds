@@ -1,0 +1,236 @@
+.related-article {
+  --rel-accent: #5041cd;
+  --rel-accent-hover: #3a2f9e;
+  --rel-accent-active: #c936a7;
+  --rel-border: #e8e8e8;
+  --rel-rule: #eee;
+  --rel-gap: 24px;
+  --rel-control-size: 40px;
+}
+
+.related-article.related-article-empty {
+  display: none;
+}
+
+/* Universal Editor only: keeps an unconfigured block clickable. */
+.related-article.related-article-placeholder {
+  padding: 24px;
+  border: 1px dashed var(--rel-border);
+  border-radius: 8px;
+}
+
+.related-article .related-placeholder-text {
+  margin: 0;
+  font-size: var(--body-font-size-xs);
+  color: var(--dark-color);
+}
+
+.related-article .related-section {
+  position: relative;
+  padding: 48px 0 60px;
+}
+
+/* Full-bleed rule above the section, escaping the content column. */
+.related-article .related-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: 3px;
+  background: var(--rel-rule);
+}
+
+.related-article .related-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.related-article .related-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+
+.related-article .related-icon-img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.related-article .related-title {
+  margin: 0;
+  font-size: var(--heading-font-size-m);
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.related-article .related-pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.related-article .rel-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.related-article .rel-arrows {
+  display: none;
+  align-items: center;
+  gap: 8px;
+}
+
+.related-article .rel-ctrl-btn,
+.related-article .rel-page-btn,
+.related-article .rel-arrow-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--rel-control-size);
+  height: var(--rel-control-size);
+  padding: 0;
+  border: none;
+  border-radius: 5px;
+  background: var(--rel-accent);
+  color: #fff;
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.related-article .rel-ctrl-btn:hover,
+.related-article .rel-page-btn:hover,
+.related-article .rel-arrow-btn:hover {
+  background: var(--rel-accent-hover);
+}
+
+.related-article .rel-page-btn.active {
+  background: var(--rel-accent-active);
+}
+
+.related-article .rel-ctrl-btn svg,
+.related-article .rel-arrow-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.related-article .related-track-wrap {
+  overflow: hidden;
+}
+
+/* The track holds one-viewport-wide slides in a row; JS translates it. */
+.related-article .related-pages {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.related-article .rel-slide {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: stretch;
+  gap: var(--rel-gap);
+  box-sizing: border-box;
+}
+
+/* Empty slot on a partial last slide, so its cards keep the normal card width. */
+.related-article .rel-placeholder {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.related-article .rel-card {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--rel-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--background-color);
+}
+
+.related-article .rel-card-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  object-fit: cover;
+}
+
+.related-article .rel-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.related-article .rel-card-tag {
+  margin-bottom: 8px;
+  font-size: var(--body-font-size-xs);
+  color: var(--text-color);
+}
+
+.related-article .rel-card-title {
+  margin-bottom: 10px;
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+.related-article .rel-card-title:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.related-article .rel-card-excerpt {
+  flex: 1;
+  margin: 0 0 10px;
+  font-size: var(--body-font-size-xs);
+  line-height: 1.5;
+  color: var(--dark-color);
+
+  /* stylelint-disable-next-line value-no-vendor-prefix -- the only cross-browser line clamp */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.related-article .rel-card-words {
+  font-size: var(--body-font-size-xs);
+  color: var(--dark-color);
+}
+
+.related-article .rel-card-words strong {
+  color: var(--text-color);
+}
+
+/* Below 992px: one card per slide, icon hidden, dots swapped for arrows. */
+@media (width <= 991.98px) {
+  .related-article .related-icon-img {
+    display: none;
+  }
+
+  .related-article .rel-dots {
+    display: none;
+  }
+
+  .related-article .rel-arrows {
+    display: flex;
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "definitions": [
+    {
+      "title": "Related Articles",
+      "id": "related-article",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Related Articles",
+              "model": "related-article",
+              "heading": "Related Articles",
+              "icon": "",
+              "iconAlt": "",
+              "pagePath": "",
+              "mode": "children"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "related-article",
+      "fields": [
+        {
+          "component": "text",
+          "name": "heading",
+          "label": "Heading",
+          "description": "The title shown next to the icon.",
+          "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "name": "icon",
+          "label": "Icon",
+          "description": "Icon shown beside the heading. Hidden below 992px.",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "iconAlt",
+          "label": "Icon alt text",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "pagePath",
+          "label": "Source page",
+          "description": "In 'Child pages' mode this is the parent whose children are listed. In 'Selected page' mode this single page is shown.",
+          "valueType": "string",
+          "required": true,
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "select",
+          "name": "mode",
+          "label": "Show",
+          "valueType": "string",
+          "value": "children",
+          "options": [
+            { "name": "Child pages of the source page", "value": "children" },
+            { "name": "The source page only", "value": "page" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
