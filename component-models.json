@@ -214,5 +214,36 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "page-details",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "pagePath",
+        "label": "Page",
+        "description": "Pick a page. Its properties are fetched from AEM at runtime.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "select",
+        "name": "mode",
+        "label": "Show",
+        "valueType": "string",
+        "value": "page",
+        "options": [
+          {
+            "name": "The selected page",
+            "value": "page"
+          },
+          {
+            "name": "Child pages of the selected page",
+            "value": "children"
+          }
+        ]
+      }
+    ]
   }
 ]
