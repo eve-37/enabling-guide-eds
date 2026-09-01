@@ -1,4 +1,4 @@
-.related-article {
+.related-articles {
   --rel-accent: #5041cd;
   --rel-accent-hover: #3a2f9e;
   --rel-accent-active: #c936a7;
@@ -8,30 +8,30 @@
   --rel-control-size: 40px;
 }
 
-.related-article.related-article-empty {
+.related-articles.related-articles-empty {
   display: none;
 }
 
 /* Universal Editor only: keeps an unconfigured block clickable. */
-.related-article.related-article-placeholder {
+.related-articles.related-articles-placeholder {
   padding: 24px;
   border: 1px dashed var(--rel-border);
   border-radius: 8px;
 }
 
-.related-article .related-placeholder-text {
+.related-articles .related-placeholder-text {
   margin: 0;
   font-size: var(--body-font-size-xs);
   color: var(--dark-color);
 }
 
-.related-article .related-section {
+.related-articles .related-section {
   position: relative;
   padding: 48px 0 60px;
 }
 
 /* Full-bleed rule above the section, escaping the content column. */
-.related-article .related-section::before {
+.related-articles .related-section::before {
   content: "";
   position: absolute;
   top: 0;
@@ -41,7 +41,7 @@
   background: var(--rel-rule);
 }
 
-.related-article .related-header {
+.related-articles .related-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -49,48 +49,48 @@
   margin-bottom: 32px;
 }
 
-.related-article .related-title-wrap {
+.related-articles .related-title-wrap {
   display: flex;
   align-items: center;
   gap: 20px;
   min-width: 0;
 }
 
-.related-article .related-icon-img {
+.related-articles .related-icon-img {
   width: 72px;
   height: 72px;
   object-fit: contain;
   border-radius: 4px;
 }
 
-.related-article .related-title {
+.related-articles .related-title {
   margin: 0;
   font-size: var(--heading-font-size-m);
   font-weight: 700;
   color: var(--text-color);
 }
 
-.related-article .related-pagination {
+.related-articles .related-pagination {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.related-article .rel-dots {
+.related-articles .rel-dots {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.related-article .rel-arrows {
+.related-articles .rel-arrows {
   display: none;
   align-items: center;
   gap: 8px;
 }
 
-.related-article .rel-ctrl-btn,
-.related-article .rel-page-btn,
-.related-article .rel-arrow-btn {
+.related-articles .rel-ctrl-btn,
+.related-articles .rel-page-btn,
+.related-articles .rel-arrow-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,34 +108,34 @@
   transition: background 0.15s;
 }
 
-.related-article .rel-ctrl-btn:hover,
-.related-article .rel-page-btn:hover,
-.related-article .rel-arrow-btn:hover {
+.related-articles .rel-ctrl-btn:hover,
+.related-articles .rel-page-btn:hover,
+.related-articles .rel-arrow-btn:hover {
   background: var(--rel-accent-hover);
 }
 
-.related-article .rel-page-btn.active {
+.related-articles .rel-page-btn.active {
   background: var(--rel-accent-active);
 }
 
-.related-article .rel-ctrl-btn svg,
-.related-article .rel-arrow-btn svg {
+.related-articles .rel-ctrl-btn svg,
+.related-articles .rel-arrow-btn svg {
   display: block;
   width: 18px;
   height: 18px;
 }
 
-.related-article .related-track-wrap {
+.related-articles .related-track-wrap {
   overflow: hidden;
 }
 
 /* The track holds one-viewport-wide slides in a row; JS translates it. */
-.related-article .related-pages {
+.related-articles .related-pages {
   display: flex;
   flex-wrap: nowrap;
 }
 
-.related-article .rel-slide {
+.related-articles .rel-slide {
   display: flex;
   flex: 0 0 100%;
   align-items: stretch;
@@ -144,12 +144,12 @@
 }
 
 /* Empty slot on a partial last slide, so its cards keep the normal card width. */
-.related-article .rel-placeholder {
+.related-articles .rel-placeholder {
   flex: 1 1 0;
   min-width: 0;
 }
 
-.related-article .rel-card {
+.related-articles .rel-card {
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
@@ -161,7 +161,7 @@
   background: var(--background-color);
 }
 
-.related-article .rel-card-img {
+.related-articles .rel-card-img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -169,20 +169,20 @@
   object-fit: cover;
 }
 
-.related-article .rel-card-body {
+.related-articles .rel-card-body {
   display: flex;
   flex: 1;
   flex-direction: column;
   padding: 20px;
 }
 
-.related-article .rel-card-tag {
+.related-articles .rel-card-tag {
   margin-bottom: 8px;
   font-size: var(--body-font-size-xs);
   color: var(--text-color);
 }
 
-.related-article .rel-card-title {
+.related-articles .rel-card-title {
   margin-bottom: 10px;
   font-size: var(--body-font-size-s);
   font-weight: 700;
@@ -191,12 +191,12 @@
   text-decoration: none;
 }
 
-.related-article .rel-card-title:hover {
+.related-articles .rel-card-title:hover {
   color: var(--link-hover-color);
   text-decoration: underline;
 }
 
-.related-article .rel-card-excerpt {
+.related-articles .rel-card-excerpt {
   flex: 1;
   margin: 0 0 10px;
   font-size: var(--body-font-size-xs);
@@ -211,26 +211,26 @@
   overflow: hidden;
 }
 
-.related-article .rel-card-words {
+.related-articles .rel-card-words {
   font-size: var(--body-font-size-xs);
   color: var(--dark-color);
 }
 
-.related-article .rel-card-words strong {
+.related-articles .rel-card-words strong {
   color: var(--text-color);
 }
 
 /* Below 992px: one card per slide, icon hidden, dots swapped for arrows. */
 @media (width <= 991.98px) {
-  .related-article .related-icon-img {
+  .related-articles .related-icon-img {
     display: none;
   }
 
-  .related-article .rel-dots {
+  .related-articles .rel-dots {
     display: none;
   }
 
-  .related-article .rel-arrows {
+  .related-articles .rel-arrows {
     display: flex;
   }
 }

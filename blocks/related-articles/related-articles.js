@@ -92,16 +92,61 @@ function readText(row) {
   return (row?.textContent || '').trim();
 }
 
+function cellOf(row) {
+  return row?.querySelector(':scope > div') || row;
+}
+
+/**
+ * Finds each field by what the cell contains rather than by row index.
+ *
+ * Row count is not fixed: AEM renders an "<field>Alt" text field as the alt
+ * attribute of the image field it names instead of giving it a row of its own,
+ * so this block arrives with four rows even though the model declares five
+ * fields. Positional indexing silently reads the wrong cells.
+ *
+ * Heading is the exception - the model puts it first, and it is the one field
+ * with no distinguishing content.
+ */
+function readRows(block) {
+  const rows = [...block.children];
+  const found = {
+    headingRow: rows[0] || null, iconRow: null, pathRow: null, modeRow: null, altRow: null,
+  };
+
+  rows.slice(1).forEach((row) => {
+    const cell = cellOf(row);
+    if (!found.iconRow && cell.querySelector('picture, img')) {
+      found.iconRow = row;
+      return;
+    }
+    if (!found.pathRow && readAuthoredPath(cell)) {
+      found.pathRow = row;
+      return;
+    }
+    const text = (cell.textContent || '').trim().toLowerCase();
+    if (!found.modeRow && (text === 'children' || text === 'page')) {
+      found.modeRow = row;
+      return;
+    }
+    // A standalone alt row, for the day the Alt convention no longer applies.
+    if (!found.altRow && text) found.altRow = row;
+  });
+
+  return found;
+}
+
 /**
  * Reuses the authored <picture> rather than rebuilding it, so the srcset the
- * EDS media bus generated survives.
+ * EDS media bus generated survives. AEM has normally already put iconAlt on the
+ * img, so an authored alt is kept unless an explicit one is passed in.
  */
 function readIcon(row, altText) {
   const media = row?.querySelector('picture, img');
   if (!media) return null;
   const img = media.tagName === 'IMG' ? media : media.querySelector('img');
   if (img) {
-    img.setAttribute('alt', altText || '');
+    if (altText) img.setAttribute('alt', altText);
+    else if (img.getAttribute('alt') === null) img.setAttribute('alt', '');
     img.removeAttribute('width');
     img.removeAttribute('height');
     img.classList.add('related-icon-img');
@@ -267,10 +312,10 @@ function createShell({ heading, icon }) {
 function renderEmpty(block, message) {
   block.textContent = '';
   if (block.hasAttribute('data-aue-resource')) {
-    block.classList.add('related-article-placeholder');
+    block.classList.add('related-articles-placeholder');
     block.appendChild(el('p', 'related-placeholder-text', message));
   } else {
-    block.classList.add('related-article-empty');
+    block.classList.add('related-articles-empty');
   }
 }
 
@@ -475,13 +520,13 @@ function initCarousel(refs, cards) {
 /* -------------------------------------------------------------------------- */
 
 export default async function decorate(block) {
-  // Row order follows the field order in _related-article.json.
-  const [headingRow, iconRow, iconAltRow, pathRow, modeRow] = [...block.children];
+  const {
+    headingRow, iconRow, pathRow, modeRow, altRow,
+  } = readRows(block);
 
   const heading = readText(headingRow);
-  const iconAlt = readText(iconAltRow);
-  const icon = readIcon(iconRow, iconAlt);
-  const pagePath = readAuthoredPath(pathRow?.querySelector(':scope > div') || pathRow);
+  const icon = readIcon(iconRow, readText(altRow));
+  const pagePath = readAuthoredPath(cellOf(pathRow));
   const wantsChildren = readText(modeRow).toLowerCase() !== 'page';
 
   if (!pagePath) {
@@ -502,7 +547,7 @@ export default async function decorate(block) {
   // Keeps the heading inline-editable in the Universal Editor after the
   // authored rows are thrown away.
   if (headingRow) {
-    moveInstrumentation(headingRow.querySelector(':scope > div') || headingRow, refs.title);
+    moveInstrumentation(cellOf(headingRow), refs.title);
   }
 
   block.textContent = '';
