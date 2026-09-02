@@ -1,0 +1,49 @@
+{
+  "definitions": [
+    {
+      "title": "Stories Listing",
+      "id": "stories-listing",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Stories Listing",
+              "model": "stories-listing",
+              "pagePath": "",
+              "mode": "children"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "stories-listing",
+      "fields": [
+        {
+          "component": "aem-content",
+          "name": "pagePath",
+          "label": "Source page",
+          "description": "In 'Child pages' mode this is the parent whose stories are listed. The first story is shown large; the next three are listed beside it. Anything past the fourth is not shown.",
+          "valueType": "string",
+          "required": true,
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "select",
+          "name": "mode",
+          "label": "Show",
+          "valueType": "string",
+          "value": "children",
+          "options": [
+            { "name": "Child pages of the source page", "value": "children" },
+            { "name": "The source page only", "value": "page" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

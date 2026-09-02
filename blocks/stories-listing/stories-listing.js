@@ -1,0 +1,292 @@
+import { getBasePathBasedOnEnv } from '../../scripts/utils.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+/**
+ * Resource-type-bound endpoint node. Uses the archetype appId (enablingguide),
+ * NOT the site name (enabling-guide-eds).
+ *
+ * This block deliberately reuses the relatedarticles selector rather than
+ * adding one of its own: StoriesListingModel needed title, subtitle,
+ * description, image, path and word count, which is exactly what that endpoint
+ * already returns. The featured/rest split and the four-item cap below are
+ * layout, not data, so they live here.
+ *
+ * If you rename this block, the folder and both filenames must match the
+ * slugified "name" in _stories-listing.json - not its "id". EDS derives the
+ * block class and asset path from the name stored on the node, so a mismatch
+ * 404s silently and the block renders as raw stacked rows.
+ */
+const API_NODE = '/content/enablingguide-api';
+
+/** One featured story plus three beside it, as the Sites model's MAX_STORIES did. */
+const MAX_STORIES = 4;
+const EXCERPT_LIMIT = 150;
+const FALLBACK_SUBTITLE = 'Stories';
+
+/* -------------------------------------------------------------------------- */
+/* Data                                                                       */
+/* -------------------------------------------------------------------------- */
+
+export function buildApiUrl(pagePath, { children = false } = {}) {
+  const selectors = children ? 'relatedarticles.children' : 'relatedarticles';
+  return `${getBasePathBasedOnEnv()}${API_NODE}.${selectors}.json${pagePath}`;
+}
+
+/**
+ * Always resolves to an array so the caller has one shape to render.
+ *
+ * No custom request headers on purpose. A plain GET is a CORS-simple request,
+ * so no OPTIONS preflight fires and the dispatcher only has to allow GET.
+ */
+export async function fetchStories(pagePath, options = {}) {
+  try {
+    const response = await fetch(buildApiUrl(pagePath, options));
+    if (!response.ok) {
+      throw new Error(`Stories request failed: ${response.status}`);
+    }
+    const body = await response.json();
+    if (options.children) {
+      return body?.data?.items ?? [];
+    }
+    const item = body?.data?.item;
+    return item ? [item] : [];
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching stories:', error);
+    return [];
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reading the authored rows                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The aem-content field can land in the DOM as an anchor or as the raw path in
+ * a text node, so both are handled. A DAM path here means the row reading is
+ * off, not that the author picked an image as a page.
+ */
+function readAuthoredPath(cell) {
+  if (!cell) return null;
+
+  const link = cell.querySelector('a[href]');
+  const raw = link ? link.getAttribute('href') : cell.textContent;
+  if (!raw || !raw.trim()) return null;
+
+  let path = raw.trim();
+
+  if (path.startsWith('http')) {
+    try {
+      path = new URL(path).pathname;
+    } catch {
+      return null;
+    }
+  }
+
+  path = path.replace(/\.html$/, '');
+  if (!path.startsWith('/content/') || path.startsWith('/content/dam/')) return null;
+  return path;
+}
+
+function cellOf(row) {
+  return row?.querySelector(':scope > div') || row;
+}
+
+/**
+ * Finds each field by what its cell contains rather than by row index, because
+ * row count is not reliably field count - AEM folds an "<image>Alt" field into
+ * the alt attribute of the image it names, giving a model one fewer row than
+ * its field list suggests. This model has no image today, but the block stays
+ * correct if one is added later.
+ */
+function readRows(block) {
+  const found = { pathRow: null, modeRow: null };
+
+  [...block.children].forEach((row) => {
+    const cell = cellOf(row);
+    if (!found.pathRow && readAuthoredPath(cell)) {
+      found.pathRow = row;
+      return;
+    }
+    const text = (cell.textContent || '').trim().toLowerCase();
+    if (!found.modeRow && (text === 'children' || text === 'page')) found.modeRow = row;
+  });
+
+  return found;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Current-page exclusion                                                     */
+/* -------------------------------------------------------------------------- */
+
+function normalisePath(path) {
+  if (!path) return '';
+  let value = path.replace(/\.html$/, '');
+  if (value.length > 1) value = value.replace(/\/$/, '');
+  return value;
+}
+
+/**
+ * The servlet response is cached by path and selector and has no idea which
+ * page is asking, so a listing placed on one of its own stories has to drop
+ * that story here.
+ */
+function withoutCurrentPage(items) {
+  const here = normalisePath(window.location.pathname);
+  const seen = new Set();
+  return items.filter((item) => {
+    if (!item) return false;
+    const path = normalisePath(item.path);
+    if (!path) return true;
+    if (path === here || seen.has(path)) return false;
+    seen.add(path);
+    return true;
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/* Rendering                                                                  */
+/* -------------------------------------------------------------------------- */
+
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text != null) node.textContent = text;
+  return node;
+}
+
+function truncate(text, limit) {
+  if (!text) return '';
+  return text.length > limit ? `${text.slice(0, limit)}...` : text;
+}
+
+/**
+ * DAM images are served by AEM, not the EDS media bus, so createOptimizedPicture
+ * must not be used - AEM ignores the ?width=&format=webply query it appends and
+ * you get an unoptimised original behind a srcset that claims otherwise.
+ */
+function createImage(item, width, height) {
+  const img = document.createElement('img');
+  img.src = `${getBasePathBasedOnEnv()}${item.image}`;
+  img.alt = '';
+  img.width = width;
+  img.height = height;
+  img.loading = 'lazy';
+  return img;
+}
+
+/** The shared text column: tag, linked title, excerpt, word count. */
+function createBody(item, className) {
+  const body = el('div', className);
+
+  // The subtitle property or the literal fallback, matching StoriesListingModel.
+  // Deliberately NOT item.category: the servlet sets that to the parent page's
+  // title, so a listing under /index would tag every card "Index".
+  body.appendChild(el('div', 'story-tag', item.subTitle || FALLBACK_SUBTITLE));
+
+  const heading = el('h3');
+  const link = el('a', null, item.title || '');
+  link.href = item.path || '#';
+  heading.appendChild(link);
+  body.appendChild(heading);
+
+  if (item.description) {
+    body.appendChild(el('p', null, truncate(item.description, EXCERPT_LIMIT)));
+  }
+
+  if (item.wordCount) {
+    const words = el('div', 'story-words');
+    words.appendChild(el('strong', null, String(item.wordCount)));
+    words.appendChild(document.createTextNode(' words'));
+    body.appendChild(words);
+  }
+
+  return body;
+}
+
+function createStoryCard(item) {
+  const card = el('div', 'story-card');
+  if (item.image) card.appendChild(createImage(item, 220, 150));
+  card.appendChild(createBody(item, 'story-meta'));
+  return card;
+}
+
+function createFeatured(item) {
+  const featured = el('div', 'story-featured');
+  if (item.image) featured.appendChild(createImage(item, 480, 420));
+  featured.appendChild(createBody(item, 'story-featured-body'));
+  return featured;
+}
+
+/**
+ * A block that renders nothing cannot be clicked in the Universal Editor, so an
+ * author has no way back into the dialog to fix it. Show a placeholder while
+ * editing; render nothing at all on the published site.
+ */
+function renderEmpty(block, message) {
+  block.textContent = '';
+  if (block.hasAttribute('data-aue-resource')) {
+    block.classList.add('stories-listing-placeholder');
+    block.appendChild(el('p', 'stories-placeholder-text', message));
+  } else {
+    block.classList.add('stories-listing-empty');
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Entry point                                                                */
+/* -------------------------------------------------------------------------- */
+
+export default async function decorate(block) {
+  const { pathRow, modeRow } = readRows(block);
+
+  const pagePath = readAuthoredPath(cellOf(pathRow));
+  const wantsChildren = (modeRow?.textContent || '').trim().toLowerCase() !== 'page';
+
+  if (!pagePath) {
+    renderEmpty(block, 'Stories Listing: pick a source page.');
+    return;
+  }
+
+  const available = withoutCurrentPage(await fetchStories(pagePath, { children: wantsChildren }));
+
+  if (!available.length) {
+    renderEmpty(block, 'Stories Listing: nothing to show for the selected page.');
+    return;
+  }
+
+  // The layout holds exactly one featured story and three beside it.
+  const items = available.slice(0, MAX_STORIES);
+  const [featured, ...rest] = items;
+
+  const section = el('div', 'stories');
+  const grid = el('div', 'stories-grid');
+
+  if (rest.length) {
+    const left = el('div', 'stories-left');
+    rest.forEach((item) => left.appendChild(createStoryCard(item)));
+    grid.appendChild(left);
+  }
+
+  const featuredCard = createFeatured(featured);
+  grid.appendChild(featuredCard);
+  section.appendChild(grid);
+
+  // Keeps the Universal Editor overlay attached to the rebuilt markup so
+  // authors can still click the block and change the source page.
+  if (pathRow) moveInstrumentation(cellOf(pathRow), featuredCard);
+
+  block.textContent = '';
+  block.appendChild(section);
+
+  // The Sites model raised tooManyItems for authors who configured more than
+  // four. The equivalent warning belongs in the editor only - on the published
+  // page the extra stories are simply not part of this layout.
+  if (available.length > MAX_STORIES && block.hasAttribute('data-aue-resource')) {
+    block.appendChild(el(
+      'p',
+      'stories-listing-note',
+      `Showing ${MAX_STORIES} of ${available.length} stories. This layout holds one featured story and three beside it.`,
+    ));
+  }
+}
