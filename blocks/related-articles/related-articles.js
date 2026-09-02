@@ -107,13 +107,39 @@ function cellOf(row) {
  * Heading is the exception - the model puts it first, and it is the one field
  * with no distinguishing content.
  */
+const MODES = ['children', 'page', 'selection'];
+
+/**
+ * Splits the block's rows into the parent's own fields and its child items.
+ *
+ * The mode select is the last field on the parent model, and a container
+ * block's child items are always appended after the parent's property rows, so
+ * the mode row is the boundary: a page path before it is the source page, a
+ * page path after it is a selected article.
+ *
+ * Everything before that boundary is still matched on content rather than
+ * index, because AEM folds iconAlt into the icon's alt attribute and this model
+ * therefore arrives with one row fewer than it has fields.
+ */
 function readRows(block) {
   const rows = [...block.children];
+  const modeIndex = rows.findIndex((row) => MODES.includes(
+    (cellOf(row).textContent || '').trim().toLowerCase(),
+  ));
+
+  const before = modeIndex === -1 ? rows : rows.slice(0, modeIndex);
+  const after = modeIndex === -1 ? [] : rows.slice(modeIndex + 1);
+
   const found = {
-    headingRow: rows[0] || null, iconRow: null, pathRow: null, modeRow: null, altRow: null,
+    headingRow: before[0] || null,
+    iconRow: null,
+    pathRow: null,
+    modeRow: modeIndex === -1 ? null : rows[modeIndex],
+    altRow: null,
+    itemPaths: after.map((row) => readAuthoredPath(cellOf(row))).filter(Boolean),
   };
 
-  rows.slice(1).forEach((row) => {
+  before.slice(1).forEach((row) => {
     const cell = cellOf(row);
     if (!found.iconRow && cell.querySelector('picture, img')) {
       found.iconRow = row;
@@ -123,12 +149,8 @@ function readRows(block) {
       found.pathRow = row;
       return;
     }
-    const text = (cell.textContent || '').trim().toLowerCase();
-    if (!found.modeRow && (text === 'children' || text === 'page')) {
-      found.modeRow = row;
-      return;
-    }
     // A standalone alt row, for the day the Alt convention no longer applies.
+    const text = (cell.textContent || '').trim();
     if (!found.altRow && text) found.altRow = row;
   });
 
@@ -524,20 +546,30 @@ function initCarousel(refs, cards) {
 
 export default async function decorate(block) {
   const {
-    headingRow, iconRow, pathRow, modeRow, altRow,
+    headingRow, iconRow, pathRow, modeRow, altRow, itemPaths,
   } = readRows(block);
 
   const heading = readText(headingRow);
   const icon = readIcon(iconRow, readText(altRow));
   const pagePath = readAuthoredPath(cellOf(pathRow));
-  const wantsChildren = readText(modeRow).toLowerCase() !== 'page';
+  const mode = readText(modeRow).toLowerCase();
 
-  if (!pagePath) {
+  if (mode === 'selection' && !itemPaths.length) {
+    renderEmpty(block, 'Related Articles: add the articles to show.');
+    return;
+  }
+
+  if (mode !== 'selection' && !pagePath) {
     renderEmpty(block, 'Related Articles: pick a source page.');
     return;
   }
 
-  const items = withoutCurrentPage(await fetchArticles(pagePath, { children: wantsChildren }));
+  const fetched = mode === 'selection'
+    // One cached request per article, in parallel, kept in authored order.
+    ? (await Promise.all(itemPaths.map((path) => fetchArticles(path)))).flat()
+    : await fetchArticles(pagePath, { children: mode !== 'page' });
+
+  const items = withoutCurrentPage(fetched);
 
   if (!items.length) {
     renderEmpty(block, 'Related Articles: nothing to show for the selected page.');

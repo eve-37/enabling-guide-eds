@@ -188,7 +188,23 @@
                   "icon": "",
                   "iconAlt": "",
                   "pagePath": "",
-                  "mode": "children"
+                  "mode": "children",
+                  "filter": "related-article"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Related Article",
+          "id": "related-article-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Article",
+                  "model": "related-article-item"
                 }
               }
             }
@@ -225,7 +241,23 @@
                   "name": "Stories Listing",
                   "model": "stories-listing",
                   "pagePath": "",
-                  "mode": "children"
+                  "mode": "children",
+                  "filter": "stories-listing"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Story",
+          "id": "stories-listing-item",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Story",
+                  "model": "stories-listing-item"
                 }
               }
             }

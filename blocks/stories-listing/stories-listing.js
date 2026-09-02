@@ -92,27 +92,36 @@ function cellOf(row) {
   return row?.querySelector(':scope > div') || row;
 }
 
+const MODES = ['children', 'page', 'selection'];
+
 /**
- * Finds each field by what its cell contains rather than by row index, because
- * row count is not reliably field count - AEM folds an "<image>Alt" field into
- * the alt attribute of the image it names, giving a model one fewer row than
- * its field list suggests. This model has no image today, but the block stays
- * correct if one is added later.
+ * Splits the block's rows into the parent's own fields and its child items.
+ *
+ * The mode select is the last field on the parent model, and a container
+ * block's child items are always appended after the parent's property rows.
+ * So the mode row is the boundary: a page path before it is the source page, a
+ * page path after it is a selected story.
+ *
+ * Anchoring on the mode row rather than counting rows matters because row count
+ * is not reliably field count - AEM folds an "<image>Alt" field into the alt
+ * attribute of the image it names, and this way the reading survives that.
  */
 function readRows(block) {
-  const found = { pathRow: null, modeRow: null };
+  const rows = [...block.children];
+  const modeIndex = rows.findIndex((row) => MODES.includes(
+    (cellOf(row).textContent || '').trim().toLowerCase(),
+  ));
 
-  [...block.children].forEach((row) => {
-    const cell = cellOf(row);
-    if (!found.pathRow && readAuthoredPath(cell)) {
-      found.pathRow = row;
-      return;
-    }
-    const text = (cell.textContent || '').trim().toLowerCase();
-    if (!found.modeRow && (text === 'children' || text === 'page')) found.modeRow = row;
-  });
+  const before = modeIndex === -1 ? rows : rows.slice(0, modeIndex);
+  const after = modeIndex === -1 ? [] : rows.slice(modeIndex + 1);
 
-  return found;
+  return {
+    modeRow: modeIndex === -1 ? null : rows[modeIndex],
+    pathRow: before.find((row) => readAuthoredPath(cellOf(row))) || null,
+    itemPaths: after
+      .map((row) => readAuthoredPath(cellOf(row)))
+      .filter(Boolean),
+  };
 }
 
 /* -------------------------------------------------------------------------- */
@@ -238,17 +247,27 @@ function renderEmpty(block, message) {
 /* -------------------------------------------------------------------------- */
 
 export default async function decorate(block) {
-  const { pathRow, modeRow } = readRows(block);
+  const { pathRow, modeRow, itemPaths } = readRows(block);
 
   const pagePath = readAuthoredPath(cellOf(pathRow));
-  const wantsChildren = (modeRow?.textContent || '').trim().toLowerCase() !== 'page';
+  const mode = (modeRow?.textContent || '').trim().toLowerCase();
 
-  if (!pagePath) {
+  if (mode === 'selection' && !itemPaths.length) {
+    renderEmpty(block, 'Stories Listing: add the stories to show.');
+    return;
+  }
+
+  if (mode !== 'selection' && !pagePath) {
     renderEmpty(block, 'Stories Listing: pick a source page.');
     return;
   }
 
-  const available = withoutCurrentPage(await fetchStories(pagePath, { children: wantsChildren }));
+  const fetched = mode === 'selection'
+    // One cached request per story, in parallel, kept in authored order.
+    ? (await Promise.all(itemPaths.map((path) => fetchStories(path)))).flat()
+    : await fetchStories(pagePath, { children: mode !== 'page' });
+
+  const available = withoutCurrentPage(fetched);
 
   if (!available.length) {
     renderEmpty(block, 'Stories Listing: nothing to show for the selected page.');

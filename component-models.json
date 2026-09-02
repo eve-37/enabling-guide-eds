@@ -274,9 +274,8 @@
         "component": "aem-content",
         "name": "pagePath",
         "label": "Source page",
-        "description": "In 'Child pages' mode this is the parent whose children are listed. In 'Selected page' mode this single page is shown.",
+        "description": "Used in 'Child pages' and 'Selected page' modes. Ignored in 'Selected pages' mode, where the articles are added to the block as child items instead.",
         "valueType": "string",
-        "required": true,
         "rootPath": "/content/enabling-guide-eds"
       },
       {
@@ -293,8 +292,26 @@
           {
             "name": "The source page only",
             "value": "page"
+          },
+          {
+            "name": "Selected pages",
+            "value": "selection"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "related-article-item",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "pagePath",
+        "label": "Page",
+        "description": "The page to show in this slot.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
       }
     ]
   },
@@ -357,9 +374,8 @@
         "component": "aem-content",
         "name": "pagePath",
         "label": "Source page",
-        "description": "In 'Child pages' mode this is the parent whose stories are listed. The first story is shown large; the next three are listed beside it. Anything past the fourth is not shown.",
+        "description": "Used in 'Child pages' and 'Selected page' modes. Ignored in 'Selected pages' mode, where the stories are added to the block as child items instead.",
         "valueType": "string",
-        "required": true,
         "rootPath": "/content/enabling-guide-eds"
       },
       {
@@ -376,8 +392,26 @@
           {
             "name": "The source page only",
             "value": "page"
+          },
+          {
+            "name": "Selected pages",
+            "value": "selection"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "stories-listing-item",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "pagePath",
+        "label": "Page",
+        "description": "The page to show in this slot.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
       }
     ]
   }

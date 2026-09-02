@@ -42,5 +42,17 @@
       "button",
       "title"
     ]
+  },
+  {
+    "id": "related-article",
+    "components": [
+      "related-article-item"
+    ]
+  },
+  {
+    "id": "stories-listing",
+    "components": [
+      "stories-listing-item"
+    ]
   }
 ]
