@@ -91,6 +91,18 @@
   gap: 12px;
 }
 
+/*
+ * Hidden when every card fits on one slide - nothing to page through, so the
+ * pause button, the dots and the arrows all go.
+ *
+ * This rule is load-bearing, not belt-and-braces: the display:flex above
+ * outranks the browser's own [hidden] { display: none }, so setting the
+ * attribute from JS has no visual effect without it.
+ */
+.related-events .rel-events-controls[hidden] {
+  display: none;
+}
+
 .related-events .rel-dots {
   display: flex;
   gap: 12px;

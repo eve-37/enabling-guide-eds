@@ -21,6 +21,21 @@
           "name": "keywords",
           "multi": true,
           "label": "Keywords"
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "fragmentPath",
+          "label": "Event fragment",
+          "description": "Event pages only. The Content Fragment holding this event's startDate and endDate. RelatedEventsServlet reads it to build the date shown on the card.",
+          "rootPath": "/content/dam/enabling-guide-eds"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "eventCategory",
+          "label": "Event category",
+          "description": "Event pages only. The badge shown on the card. Defaults to 'Training/ Workshops/ Talks' when left empty."
         }
       ]
     }
