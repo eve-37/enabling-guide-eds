@@ -231,7 +231,10 @@ function createCard(item) {
   const body = el('div', 'rel-card-body');
 
   const tag = el('div', 'rel-card-tag');
-  tag.appendChild(el('strong', null, item.subTitle || item.category || FALLBACK_SUBTITLE));
+  // The subtitle property or the literal fallback, matching RelatedArticleModel.
+  // Deliberately NOT item.category: the servlet sets that to the parent page's
+  // title, so a listing under /index would tag every card "Index".
+  tag.appendChild(el('strong', null, item.subTitle || FALLBACK_SUBTITLE));
   body.appendChild(tag);
 
   const link = el('a', 'rel-card-title', item.title || '');
