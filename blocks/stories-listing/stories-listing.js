@@ -118,9 +118,12 @@ function readRows(block) {
   return {
     modeRow: modeIndex === -1 ? null : rows[modeIndex],
     pathRow: before.find((row) => readAuthoredPath(cellOf(row))) || null,
-    itemPaths: after
-      .map((row) => readAuthoredPath(cellOf(row)))
-      .filter(Boolean),
+    // The row is kept alongside the path: each child item carries its own
+    // data-aue-resource, and that has to be moved onto the card that replaces
+    // it or the Universal Editor loses the item entirely.
+    items: after
+      .map((row) => ({ row, path: readAuthoredPath(cellOf(row)) }))
+      .filter((entry) => entry.path),
   };
 }
 
@@ -233,11 +236,15 @@ function createFeatured(item) {
  * editing; render nothing at all on the published site.
  */
 function renderEmpty(block, message) {
-  block.textContent = '';
   if (block.hasAttribute('data-aue-resource')) {
+    // In the editor the authored rows are left in place. Emptying the block
+    // would destroy the child items' instrumentation, and the author would
+    // watch their Story items vanish from the content tree a second after the
+    // page loads.
     block.classList.add('stories-listing-placeholder');
     block.appendChild(el('p', 'stories-placeholder-text', message));
   } else {
+    block.textContent = '';
     block.classList.add('stories-listing-empty');
   }
 }
@@ -247,10 +254,13 @@ function renderEmpty(block, message) {
 /* -------------------------------------------------------------------------- */
 
 export default async function decorate(block) {
-  const { pathRow, modeRow, itemPaths } = readRows(block);
+  const { pathRow, modeRow, items: authoredItems } = readRows(block);
 
   const pagePath = readAuthoredPath(cellOf(pathRow));
   const mode = (modeRow?.textContent || '').trim().toLowerCase();
+  const itemPaths = authoredItems.map((entry) => entry.path);
+  // Lets each rendered card reclaim the instrumentation of the row it came from.
+  const rowForPath = new Map(authoredItems.map((entry) => [entry.path, entry.row]));
 
   if (mode === 'selection' && !itemPaths.length) {
     // An item with no page picked contributes no row, so "add a Story" would be
@@ -280,22 +290,38 @@ export default async function decorate(block) {
   const items = available.slice(0, MAX_STORIES);
   const [featured, ...rest] = items;
 
+  /**
+   * Carries a selected item's data-aue-resource onto the card built from it.
+   * Without this the child items are destroyed when the block is rebuilt: the
+   * author sees them disappear from the content tree, and the block stops
+   * offering to add more.
+   */
+  const reinstrument = (item, element) => {
+    const row = rowForPath.get(item.aemPath) || rowForPath.get(item.path);
+    if (row) moveInstrumentation(row, element);
+  };
+
   const section = el('div', 'stories');
   const grid = el('div', 'stories-grid');
 
   if (rest.length) {
     const left = el('div', 'stories-left');
-    rest.forEach((item) => left.appendChild(createStoryCard(item)));
+    rest.forEach((item) => {
+      const card = createStoryCard(item);
+      reinstrument(item, card);
+      left.appendChild(card);
+    });
     grid.appendChild(left);
   }
 
   const featuredCard = createFeatured(featured);
+  reinstrument(featured, featuredCard);
   grid.appendChild(featuredCard);
   section.appendChild(grid);
 
-  // Keeps the Universal Editor overlay attached to the rebuilt markup so
-  // authors can still click the block and change the source page.
-  if (pathRow) moveInstrumentation(cellOf(pathRow), featuredCard);
+  // In the other modes there are no child items, so the source page field is
+  // what the author needs to reach from the rendered markup.
+  if (mode !== 'selection' && pathRow) moveInstrumentation(cellOf(pathRow), featuredCard);
 
   block.textContent = '';
   block.appendChild(section);

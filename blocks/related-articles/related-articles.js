@@ -136,7 +136,12 @@ function readRows(block) {
     pathRow: null,
     modeRow: modeIndex === -1 ? null : rows[modeIndex],
     altRow: null,
-    itemPaths: after.map((row) => readAuthoredPath(cellOf(row))).filter(Boolean),
+    // The row is kept alongside the path: each child item carries its own
+    // data-aue-resource, and that has to be moved onto the card that replaces
+    // it or the Universal Editor loses the item entirely.
+    items: after
+      .map((row) => ({ row, path: readAuthoredPath(cellOf(row)) }))
+      .filter((entry) => entry.path),
   };
 
   before.slice(1).forEach((row) => {
@@ -216,6 +221,20 @@ const ICONS = {
   prev: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   next: '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
+
+/**
+ * Clones of a slide are decoration, not content. Any data-aue-* they inherit
+ * would make two elements claim the same resource, which the Universal Editor
+ * resolves unpredictably - so the copies are stripped bare.
+ */
+function stripInstrumentation(root) {
+  [root, ...root.querySelectorAll('*')].forEach((node) => {
+    [...node.attributes]
+      .filter((attr) => attr.name.startsWith('data-aue-') || attr.name.startsWith('data-richtext-'))
+      .forEach((attr) => node.removeAttribute(attr.name));
+  });
+  return root;
+}
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -335,11 +354,15 @@ function createShell({ heading, icon }) {
  * On the published site nothing is shown at all.
  */
 function renderEmpty(block, message) {
-  block.textContent = '';
   if (block.hasAttribute('data-aue-resource')) {
+    // In the editor the authored rows are left in place. Emptying the block
+    // would destroy the child items' instrumentation, and the author would
+    // watch their Article items vanish from the content tree a second after
+    // the page loads.
     block.classList.add('related-articles-placeholder');
     block.appendChild(el('p', 'related-placeholder-text', message));
   } else {
+    block.textContent = '';
     block.classList.add('related-articles-empty');
   }
 }
@@ -394,12 +417,12 @@ function initCarousel(refs, cards) {
     hasClones = realCount > 1;
 
     if (hasClones) {
-      const endClone = slides[0].cloneNode(true);
+      const endClone = stripInstrumentation(slides[0].cloneNode(true));
       endClone.classList.add('rel-slide--clone');
       endClone.setAttribute('aria-hidden', 'true');
       track.appendChild(endClone);
 
-      const startClone = slides[realCount - 1].cloneNode(true);
+      const startClone = stripInstrumentation(slides[realCount - 1].cloneNode(true));
       startClone.classList.add('rel-slide--clone');
       startClone.setAttribute('aria-hidden', 'true');
       track.insertBefore(startClone, track.firstChild);
@@ -546,8 +569,12 @@ function initCarousel(refs, cards) {
 
 export default async function decorate(block) {
   const {
-    headingRow, iconRow, pathRow, modeRow, altRow, itemPaths,
+    headingRow, iconRow, pathRow, modeRow, altRow, items: authoredItems,
   } = readRows(block);
+
+  const itemPaths = authoredItems.map((entry) => entry.path);
+  // Lets each rendered card reclaim the instrumentation of the row it came from.
+  const rowForPath = new Map(authoredItems.map((entry) => [entry.path, entry.row]));
 
   const heading = readText(headingRow);
   const icon = readIcon(iconRow, readText(altRow));
@@ -579,7 +606,16 @@ export default async function decorate(block) {
   }
 
   const refs = createShell({ heading, icon });
-  const cards = items.map(createCard);
+  const cards = items.map((item) => {
+    const card = createCard(item);
+    // Carries a selected item's data-aue-resource onto the card built from it.
+    // Without this the child items are destroyed when the block is rebuilt: the
+    // author sees them disappear from the content tree, and the block stops
+    // offering to add more.
+    const row = rowForPath.get(item.aemPath) || rowForPath.get(item.path);
+    if (row) moveInstrumentation(row, card);
+    return card;
+  });
 
   // Keeps the heading inline-editable in the Universal Editor after the
   // authored rows are thrown away.
