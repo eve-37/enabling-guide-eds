@@ -137,7 +137,8 @@
                 "template": {
                   "name": "Event Fragment",
                   "model": "event-fragment",
-                  "fragmentPath": ""
+                  "fragmentPath": "",
+                  "source": "servlet"
                 }
               }
             }

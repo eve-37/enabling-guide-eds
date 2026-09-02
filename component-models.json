@@ -204,6 +204,24 @@
         "description": "The event Content Fragment to render. Leave empty to use the fragment named in this page's properties.",
         "valueType": "string",
         "rootPath": "/content/dam/enabling-guide-eds"
+      },
+      {
+        "component": "select",
+        "name": "source",
+        "label": "Data source",
+        "description": "Where the event data is read from. Both render identically; this exists to compare them. GraphQL requires a Content Fragment above - it cannot resolve one from the page.",
+        "valueType": "string",
+        "value": "servlet",
+        "options": [
+          {
+            "name": "Servlet (AEM JSON endpoint)",
+            "value": "servlet"
+          },
+          {
+            "name": "GraphQL (persisted query)",
+            "value": "graphql"
+          }
+        ]
       }
     ]
   },

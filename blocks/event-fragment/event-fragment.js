@@ -18,6 +18,18 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
 const API_NODE = '/content/enablingguide-api';
 
 /**
+ * The GraphQL alternative. Same data, read a different way, selectable per block
+ * instance so the two can be compared on one page.
+ *
+ * The path segment is the CONFIGURATION name, not the endpoint's title - an
+ * endpoint called "endpoint-1" is still reached as .../enabling-guide-eds/.
+ */
+const GRAPHQL_BASE = '/graphql/execute.json/enabling-guide-eds';
+const GRAPHQL_BY_PATH = 'event-by-path';
+
+const SOURCES = ['servlet', 'graphql'];
+
+/**
  * The "Supported By" logo. The 6.5 component hardcoded a single Enabling Academy
  * logo here and ignored the fragment's own supportedBy field, and that behaviour
  * is kept deliberately - so this constant is the one place to change it.
@@ -96,6 +108,152 @@ function cellOf(row) {
 }
 
 /* -------------------------------------------------------------------------- */
+/* GraphQL -> the servlet's payload shape                                     */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * GraphQL hands back raw values where the servlet hands back finished display
+ * strings, so everything the servlet does in Java has to happen here instead.
+ * Normalising to the servlet's shape keeps one renderer for both sources.
+ *
+ * Month and weekday names are spelled out rather than taken from
+ * toLocaleDateString, which varies with the viewer's locale. The servlet formats
+ * with Locale.ENGLISH, and matching the old AEM rendering exactly is the point.
+ */
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const EN_DASH = '–';
+
+/**
+ * "2026-09-05" to a local-midnight Date.
+ *
+ * Never `new Date(string)` here: a bare ISO date is parsed as UTC midnight, so
+ * every viewer west of Greenwich would see the previous day - and, worse, be
+ * told the wrong weekday. Building from integers gives local midnight.
+ */
+function parseIsoDate(value) {
+  const parts = /^(\d{4})-(\d{2})-(\d{2})/.exec(value || '');
+  if (!parts) return null;
+  return new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
+}
+
+function isSameDay(first, second) {
+  return first.getFullYear() === second.getFullYear()
+    && first.getMonth() === second.getMonth()
+    && first.getDate() === second.getDate();
+}
+
+/** Unpadded day, as the Sites model's "d MMM yyyy" produced. */
+function fullDate(date) {
+  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function dayMonth(date) {
+  return `${date.getDate()} ${MONTHS[date.getMonth()]}`;
+}
+
+function formatDateRange(startIso, endIso) {
+  const start = parseIsoDate(startIso);
+  if (!start) return null;
+  const end = parseIsoDate(endIso);
+
+  if (!end || isSameDay(start, end)) return fullDate(start);
+
+  const sameYear = start.getFullYear() === end.getFullYear();
+  const startText = sameYear ? dayMonth(start) : fullDate(start);
+  return `Starting from ${startText} ${EN_DASH} ${fullDate(end)}`;
+}
+
+function formatWeekdays(startIso, endIso) {
+  const start = parseIsoDate(startIso);
+  if (!start) return null;
+  const end = parseIsoDate(endIso);
+
+  if (!end || isSameDay(start, end)) return `(${WEEKDAYS[start.getDay()]})`;
+  return `(${WEEKDAYS[start.getDay()]} ${EN_DASH} ${WEEKDAYS[end.getDay()]})`;
+}
+
+/**
+ * "09:00:00" to "9:00 AM". The value carries no zone, so this is a pure clock
+ * reformat - simpler than the servlet's zone-aware version, with nothing to get
+ * wrong about offsets.
+ */
+function formatClock(value) {
+  const parts = /^(\d{2}):(\d{2})/.exec(value || '');
+  if (!parts) return null;
+  const hours24 = Number(parts[1]);
+  const meridiem = hours24 < 12 ? 'AM' : 'PM';
+  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+  return `${hours12}:${parts[2]} ${meridiem}`;
+}
+
+function formatTimeRange(startIso, endIso) {
+  const start = formatClock(startIso);
+  if (!start) return null;
+  const end = formatClock(endIso);
+  return end ? `${start} ${EN_DASH} ${end}` : start;
+}
+
+/** Multi-value elements come back as null rather than [] when never authored. */
+function asArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function stripHtml(value) {
+  if (!value) return null;
+  const text = value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  return text || null;
+}
+
+/** Rich text arrives as { html, plaintext }; the renderer wants the markup. */
+function richText(value) {
+  if (!value) return null;
+  return typeof value === 'string' ? value : (value.html ?? value.plaintext ?? null);
+}
+
+export function normaliseGraphqlItem(item) {
+  if (!item) return null;
+
+  const categories = asArray(item.category);
+  const out = {
+    // eslint-disable-next-line no-underscore-dangle -- AEM's own system field name
+    fragmentPath: item._path,
+    title: item.title,
+    categoryLabel: categories.length ? categories.join(' | ') : null,
+    description: richText(item.description),
+    dateRange: formatDateRange(item.startDate, item.endDate),
+    dateWeekdays: formatWeekdays(item.startDate, item.endDate),
+    timeRange: formatTimeRange(item.startTime, item.endTime),
+    venue: item.venueName ?? null,
+    address: stripHtml(item.venueAddress),
+    contact: item.contactInformation ?? null,
+    url: item.registrationUrl ?? null,
+    cost: item.cost ?? null,
+    modeOfDelivery: asArray(item.modeOfDelivery),
+    region: asArray(item.region),
+    suitableConditions: asArray(item.suitableConditions),
+    ageProfile: asArray(item.ageProfile),
+  };
+
+  // The five rich-text sections the model does not carry yet. Selected only if
+  // the persisted query asks for them, so they stay optional here.
+  ['learningGoals', 'prerequisites', 'targetAudience', 'feesAndSubsidies', 'additionalInformation']
+    .forEach((key) => {
+      const value = richText(item[key]);
+      if (value) out[key] = value;
+    });
+
+  // Drop the keys that came back empty, so the renderer's presence checks and
+  // the servlet's addIfPresent behaviour agree.
+  Object.keys(out).forEach((key) => {
+    const value = out[key];
+    if (value == null || (Array.isArray(value) && !value.length)) delete out[key];
+  });
+
+  return out;
+}
+
+/* -------------------------------------------------------------------------- */
 /* Data                                                                       */
 /* -------------------------------------------------------------------------- */
 
@@ -104,20 +262,53 @@ export function buildApiUrl(path) {
 }
 
 /**
+ * Raw slashes, deliberately. AEM reads everything after `=` in a `;name=value`
+ * segment literally, so encodeURIComponent would send %2F and the lookup fails
+ * with "Path: '%2Fcontent%2F...': no resource available". Browsers do not encode
+ * slashes in a URL path, so this is safe as written.
+ */
+export function buildGraphqlUrl(path) {
+  return `${getBasePathBasedOnEnv()}${GRAPHQL_BASE}/${GRAPHQL_BY_PATH};path=${path}`;
+}
+
+/**
  * No custom request headers on purpose. A plain GET is a CORS-simple request, so
  * no OPTIONS preflight fires and the dispatcher only has to allow GET.
  */
-export async function fetchEvent(path) {
+export async function fetchEventViaServlet(path) {
+  const response = await fetch(buildApiUrl(path));
+  if (!response.ok) {
+    throw new Error(`Event fragment request failed: ${response.status}`);
+  }
+  const body = await response.json();
+  return body?.data?.item ?? null;
+}
+
+/**
+ * GraphQL answers with HTTP 200 and an `errors` array, so `response.ok` is not
+ * enough - checking only the status would render an error as "no data" with
+ * nothing in the console to say why.
+ */
+export async function fetchEventViaGraphql(path) {
+  const response = await fetch(buildGraphqlUrl(path));
+  if (!response.ok) {
+    throw new Error(`GraphQL request failed: ${response.status}`);
+  }
+  const body = await response.json();
+  if (body?.errors?.length) {
+    throw new Error(`GraphQL error: ${body.errors.map((e) => e.message).join('; ')}`);
+  }
+  return normaliseGraphqlItem(body?.data?.eventsCfModelByPath?.item);
+}
+
+export async function fetchEvent(path, source) {
   try {
-    const response = await fetch(buildApiUrl(path));
-    if (!response.ok) {
-      throw new Error(`Event fragment request failed: ${response.status}`);
-    }
-    const body = await response.json();
-    return body?.data?.item ?? null;
+    return source === 'graphql'
+      ? await fetchEventViaGraphql(path)
+      : await fetchEventViaServlet(path);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching event fragment:', error);
+    console.error(`Error fetching event fragment via ${source || 'servlet'}:`, error);
     return null;
   }
 }
@@ -331,20 +522,45 @@ function renderEmpty(block, message) {
 /* Entry point                                                                */
 /* -------------------------------------------------------------------------- */
 
-export default async function decorate(block) {
-  const pathRow = [...block.children].find((row) => readFragmentPath(cellOf(row))) || null;
-  // Falling back to the page's own path lets the servlet resolve the fragment
-  // from the page's fragmentPath property, so an author who set it in page
-  // properties does not have to pick it a second time here.
-  const authored = readFragmentPath(cellOf(pathRow));
-  const lookupPath = authored || window.location.pathname;
+/**
+ * Two fields, so two rows - but read by content rather than position, because a
+ * row count is not reliably a field count and this block is likely to gain
+ * fields.
+ */
+function readRows(block) {
+  const rows = [...block.children];
+  return {
+    pathRow: rows.find((row) => readFragmentPath(cellOf(row))) || null,
+    sourceRow: rows.find((row) => SOURCES.includes(
+      (cellOf(row).textContent || '').trim().toLowerCase(),
+    )) || null,
+  };
+}
 
-  const item = await fetchEvent(lookupPath);
+export default async function decorate(block) {
+  const { pathRow, sourceRow } = readRows(block);
+
+  const authored = readFragmentPath(cellOf(pathRow));
+  const source = SOURCES.includes((sourceRow?.textContent || '').trim().toLowerCase())
+    ? (sourceRow.textContent || '').trim().toLowerCase()
+    : 'servlet';
+
+  // The servlet accepts a page path and resolves the page's own fragmentPath, so
+  // an author who set it in page properties need not pick it twice. GraphQL's
+  // byPath query takes a fragment path only - it cannot resolve one from a page.
+  if (source === 'graphql' && !authored) {
+    renderEmpty(block, 'Event Fragment: GraphQL needs a Content Fragment picked here. '
+      + 'Only the servlet source can inherit one from the page properties.');
+    return;
+  }
+
+  const lookupPath = authored || window.location.pathname;
+  const item = await fetchEvent(lookupPath, source);
 
   // The Sites model gated rendering on a non-blank title via isReady().
   if (!item || !item.title) {
     renderEmpty(block, authored
-      ? 'Event Fragment: nothing to show for the selected Content Fragment.'
+      ? `Event Fragment: nothing to show for the selected Content Fragment (via ${source}).`
       : 'Event Fragment: pick a Content Fragment, or set one in this page\'s properties.');
     return;
   }
