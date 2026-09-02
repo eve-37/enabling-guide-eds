@@ -195,6 +195,19 @@
     ]
   },
   {
+    "id": "event-fragment",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "fragmentPath",
+        "label": "Content Fragment",
+        "description": "The event Content Fragment to render. Leave empty to use the fragment named in this page's properties.",
+        "valueType": "string",
+        "rootPath": "/content/dam/enabling-guide-eds"
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {

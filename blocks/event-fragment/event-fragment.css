@@ -1,0 +1,228 @@
+/*
+ * Ported from event-fragment.scss. The SCSS nested everything under
+ * .cmp-event-fragment .cmp-event with BEM-ish suffixes; here the classes are
+ * flat and block-scoped, and the literal colours become custom properties so
+ * they can be retuned in one place.
+ *
+ * The two decorative icons are inline SVG rather than DAM images, so they take
+ * the surrounding text colour instead of shipping a fixed-colour PNG.
+ */
+.event-fragment {
+  --event-ink: #3a3a44;
+  --event-ink-strong: #2b2b3a;
+  --event-ink-soft: #6a6a75;
+  --event-card-bg: #f4f4f7;
+  --event-rule: #e4e4ea;
+  --event-link: #4a2fb5;
+}
+
+.event-fragment.event-fragment-empty {
+  display: none;
+}
+
+/* Universal Editor only: keeps an unconfigured block clickable. */
+.event-fragment.event-fragment-placeholder {
+  padding: 24px;
+  border: 1px dashed var(--event-rule);
+  border-radius: 8px;
+}
+
+.event-fragment .event-placeholder-text {
+  margin: 0;
+  font-size: 12px;
+  color: var(--event-ink-soft);
+}
+
+.event-fragment .event {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  color: var(--event-ink);
+  line-height: 1.6;
+}
+
+/* ---------- header ---------- */
+
+.event-fragment .event-category {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--event-ink-soft);
+}
+
+.event-fragment .event-title {
+  margin: 0 0 1.75rem;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--event-ink-strong);
+  text-wrap: balance;
+}
+
+/* ---------- two-column body ---------- */
+
+.event-fragment .event-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* No info card, so the prose takes the full width rather than leaving a gap. */
+.event-fragment .event-body-single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.event-fragment .event-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  min-width: 0;
+}
+
+/* ---------- left-side sections ---------- */
+
+.event-fragment .event-section-heading {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--event-ink-strong);
+}
+
+.event-fragment .event-section-body {
+  font-size: 1rem;
+}
+
+/* Authored rich text, so the shape of the markup is not known up front. */
+.event-fragment .event-section-body p,
+.event-fragment .event-section-body ul,
+.event-fragment .event-section-body ol {
+  margin: 0 0 0.75rem;
+}
+
+.event-fragment .event-section-body ul,
+.event-fragment .event-section-body ol {
+  padding-left: 1.25rem;
+}
+
+.event-fragment .event-section-body li {
+  margin: 0.25rem 0;
+}
+
+.event-fragment .event-section-body > :last-child {
+  margin-bottom: 0;
+}
+
+.event-fragment .event-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.event-fragment .event-logo {
+  width: 185px;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- info card ---------- */
+
+.event-fragment .event-info {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--event-rule);
+  border-radius: 10px;
+  background: var(--event-card-bg);
+}
+
+.event-fragment .event-info-row p {
+  margin: 0 0 4px;
+  padding: 0;
+  font-size: 15px;
+  text-align: left;
+}
+
+.event-fragment .event-info-label {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--event-ink-strong);
+}
+
+.event-fragment .event-info-row p:last-child {
+  margin-bottom: 24px;
+}
+
+.event-fragment .event-info-row:last-child p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- icon + value rows ---------- */
+
+.event-fragment .event-info-value-icon {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.event-fragment .event-icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 1.25em;
+  height: 1.25em;
+  margin-top: 0.175em;
+  color: var(--event-ink-soft);
+}
+
+.event-fragment .event-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.event-fragment .event-info-value-icon > span:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+/* ---------- multi-value lists ---------- */
+
+.event-fragment .event-list-item {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.event-fragment .event-list-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- block-level value spans ---------- */
+
+.event-fragment .event-venue-address,
+.event-fragment .event-contact-line,
+.event-fragment .event-date-range,
+.event-fragment .event-date-weekdays {
+  display: block;
+}
+
+.event-fragment .event-contact-line {
+  color: var(--event-link);
+  overflow-wrap: break-word;
+}
+
+/* ---------- single column below 992px ---------- */
+
+@media (width <= 991.98px) {
+  .event-fragment .event-body {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .event-fragment .event-title {
+    font-size: 1.5rem;
+  }
+}
