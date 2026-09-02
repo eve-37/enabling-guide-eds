@@ -555,7 +555,9 @@ export default async function decorate(block) {
   const mode = readText(modeRow).toLowerCase();
 
   if (mode === 'selection' && !itemPaths.length) {
-    renderEmpty(block, 'Related Articles: add the articles to show.');
+    // An item with no page picked contributes no row, so "add an Article" would
+    // be wrong advice for the common case of empty items already sitting there.
+    renderEmpty(block, 'Related Articles: add an Article item and pick a page for each one.');
     return;
   }
 

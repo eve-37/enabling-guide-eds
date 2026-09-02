@@ -253,7 +253,9 @@ export default async function decorate(block) {
   const mode = (modeRow?.textContent || '').trim().toLowerCase();
 
   if (mode === 'selection' && !itemPaths.length) {
-    renderEmpty(block, 'Stories Listing: add the stories to show.');
+    // An item with no page picked contributes no row, so "add a Story" would be
+    // wrong advice for the common case of empty items already sitting there.
+    renderEmpty(block, 'Stories Listing: add a Story item and pick a page for each one.');
     return;
   }
 
