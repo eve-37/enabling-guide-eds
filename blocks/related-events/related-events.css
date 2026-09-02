@@ -4,91 +4,91 @@
  * custom properties rather than as literals repeated down the file.
  */
 .related-events {
-  --rel-purple: #5041cd;
-  --rel-purple-dark: #4a3d8f;
-  --rel-purple-darker: #3a2f7a;
-  --rel-pink: #e91e8c;
-  --rel-pink-active: #ca39a8;
-  --rel-link-blue: #2376d8;
-  --rel-body-grey: #4a4a4a;
-  --rel-border: #ddd;
-  --rel-rule: #eee;
-  --rel-gap: 24px;
-  --rel-control-size: 48px;
+    --rel-purple: #5041cd;
+    --rel-purple-dark: #4a3d8f;
+    --rel-purple-darker: #3a2f7a;
+    --rel-pink: #e91e8c;
+    --rel-pink-active: #ca39a8;
+    --rel-link-blue: #2376d8;
+    --rel-body-grey: #4a4a4a;
+    --rel-border: #ddd;
+    --rel-rule: #eee;
+    --rel-gap: 24px;
+    --rel-control-size: 48px;
 
-  position: relative;
+    position: relative;
 }
 
 .related-events.related-events-empty {
-  display: none;
+    display: none;
 }
 
 /* Universal Editor only: keeps an unconfigured block clickable. */
 .related-events.related-events-placeholder {
-  padding: 24px;
-  border: 1px dashed var(--rel-border);
-  border-radius: 8px;
+    padding: 24px;
+    border: 1px dashed var(--rel-border);
+    border-radius: 8px;
 }
 
 .related-events .rel-events-placeholder-text {
-  margin: 0;
-  font-size: var(--body-font-size-xs);
-  color: var(--rel-body-grey);
+    margin: 0;
+    font-size: var(--body-font-size-xs);
+    color: var(--rel-body-grey);
 }
 
 /* Full-bleed rule above the section, escaping the content column. */
 .related-events::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: calc(50% - 50vw);
-  width: 100vw;
-  height: 3px;
-  background: var(--rel-rule);
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(50% - 50vw);
+    width: 100vw;
+    height: 3px;
+    background: var(--rel-rule);
 }
 
 .related-events .rel-events {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 60px 1rem;
-  box-sizing: border-box;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 60px 1rem;
+    box-sizing: border-box;
 }
 
 .related-events .rel-events-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--rel-gap);
-  margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--rel-gap);
+    margin-bottom: 32px;
 }
 
 .related-events .rel-events-title {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
 }
 
 .related-events .rel-events-icon {
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-  object-fit: contain;
-  border-radius: 10px;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 10px;
 }
 
 .related-events .rel-events-title h2 {
-  margin: 0;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.1;
-  color: #333;
+    margin: 0;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #333;
 }
 
 .related-events .rel-events-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 /*
@@ -100,185 +100,184 @@
  * attribute from JS has no visual effect without it.
  */
 .related-events .rel-events-controls[hidden] {
-  display: none;
+    display: none;
 }
 
 .related-events .rel-dots {
-  display: flex;
-  gap: 12px;
+    display: flex;
+    gap: 12px;
 }
 
 .related-events .rel-pause,
 .related-events .rel-dot,
 .related-events .rel-arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--rel-control-size);
-  height: var(--rel-control-size);
-  padding: 0;
-  border: none;
-  border-radius: 8px;
-  background: var(--rel-purple-dark);
-  color: #fff;
-  font-family: var(--body-font-family);
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--rel-control-size);
+    height: var(--rel-control-size);
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: var(--rel-purple-dark);
+    color: #fff;
+    font-family: var(--body-font-family);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s,
+        color 0.2s;
 }
 
 .related-events .rel-pause {
-  border: 2px solid #ccc;
+    border: 2px solid #ccc;
 }
 
 /* Arrows replace the dots below 992px; hidden on desktop. */
 .related-events .rel-arrow {
-  display: none;
+    display: none;
 }
 
 .related-events .rel-dot:hover,
 .related-events .rel-arrow:hover {
-  background: var(--rel-purple-darker);
+    background: var(--rel-purple-darker);
 }
 
 .related-events .rel-dot.active {
-  background: var(--rel-pink-active);
+    background: var(--rel-pink-active);
 }
 
 .related-events .rel-pause svg,
 .related-events .rel-arrow svg {
-  display: block;
-  width: 20px;
-  height: 20px;
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 
 .related-events .rel-events-viewport {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 /* The track holds one-viewport-wide slides in a row; JS translates it. */
 .related-events .rel-events-track {
-  display: flex;
-  flex-wrap: nowrap;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
 .related-events .rel-slide {
-  display: flex;
-  flex: 0 0 100%;
-  align-items: stretch;
-  gap: var(--rel-gap);
-  box-sizing: border-box;
+    display: flex;
+    flex: 0 0 100%;
+    align-items: stretch;
+    gap: var(--rel-gap);
+    box-sizing: border-box;
 }
 
 /* Empty slot on a partial last slide, so its cards keep the normal width. */
 .related-events .rel-placeholder {
-  flex: 1 1 0;
-  min-width: 0;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .related-events .rel-card {
-  display: flex;
-  flex: 1 1 0;
-  align-items: stretch;
-  gap: 16px;
-  min-width: 0;
-  padding: var(--rel-gap);
-  box-sizing: border-box;
-  border: 1px solid var(--rel-border);
-  border-radius: 10px;
-  background: var(--background-color);
-  text-decoration: none;
+    display: flex;
+    flex: 1 1 0;
+    align-items: stretch;
+    gap: 16px;
+    min-width: 0;
+    padding: var(--rel-gap);
+    box-sizing: border-box;
+    border: 1px solid var(--rel-border);
+    border-radius: 10px;
+    background: var(--background-color);
+    text-decoration: none;
 }
 
 .related-events .event-date {
-  width: 54px;
-  flex-shrink: 0;
-  align-self: flex-start;
-  overflow: hidden;
-  border: 2px solid var(--rel-pink);
-  border-radius: 6px;
-  background: #fff;
-  text-align: center;
+    width: 54px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    overflow: hidden;
+    border: 2px solid var(--rel-pink);
+    border-radius: 6px;
+    background: #fff;
+    text-align: center;
 }
 
 .related-events .event-date .month {
-  display: block;
-  padding: 3px 0;
-  background: var(--rel-pink);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
+    display: block;
+    padding: 3px 0;
+    background: var(--rel-pink);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .related-events .event-date .day {
-  display: block;
-  padding: 5px 0;
-  color: var(--rel-pink);
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 1;
+    display: block;
+    padding: 5px 0;
+    color: var(--rel-pink);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
 }
 
 .related-events .event-info {
-  display: flex;
-  flex: 1 1 auto;
-  flex-direction: column;
-  min-width: 0;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
 }
 
 .related-events .event-badge {
-  display: block;
-  margin-bottom: 6px;
-  color: #333;
-  font-size: 11px;
-  font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+    color: #333;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .related-events .event-info h4 {
-  margin: 0 0 12px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.35;
-
-  /* Reserve three title lines so cards in a row align. */
-  min-height: calc(1.35em * 3);
-  color: var(--rel-link-blue);
+    margin: 0 0 18px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--rel-link-blue);
 }
 
 .related-events .event-info p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--rel-body-grey);
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--rel-body-grey);
 }
 
 .related-events .rel-card:hover .event-info h4 {
-  color: var(--rel-purple);
-  text-decoration: underline;
+    color: var(--rel-purple);
+    text-decoration: underline;
 }
 
 /* Below 992px: one card per slide, no icon, arrows instead of dots. */
 @media (width <= 991.98px) {
-  .related-events .rel-events-icon {
-    display: none;
-  }
+    .related-events .rel-events-icon {
+        display: none;
+    }
 
-  .related-events .rel-events-title h2 {
-    font-size: 28px;
-  }
+    .related-events .rel-events-title h2 {
+        font-size: 28px;
+    }
 
-  .related-events .rel-dots {
-    display: none;
-  }
+    .related-events .rel-dots {
+        display: none;
+    }
 
-  .related-events .rel-arrow {
-    display: flex;
-  }
+    .related-events .rel-arrow {
+        display: flex;
+    }
 
-  /* No row to align to on mobile, so stop reserving three lines. */
-  .related-events .event-info h4 {
-    min-height: 0;
-  }
+    /* No row to align to on mobile, so stop reserving three lines. */
+    .related-events .event-info h4 {
+        min-height: 0;
+    }
 }
