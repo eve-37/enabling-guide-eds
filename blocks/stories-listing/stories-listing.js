@@ -118,13 +118,30 @@ function readRows(block) {
   return {
     modeRow: modeIndex === -1 ? null : rows[modeIndex],
     pathRow: before.find((row) => readAuthoredPath(cellOf(row))) || null,
-    // The row is kept alongside the path: each child item carries its own
-    // data-aue-resource, and that has to be moved onto the card that replaces
-    // it or the Universal Editor loses the item entirely.
-    items: after
-      .map((row) => ({ row, path: readAuthoredPath(cellOf(row)) }))
-      .filter((entry) => entry.path),
+    // Every row after the boundary is an item, including ones with no page
+    // picked yet. They are all kept: each carries its own data-aue-resource,
+    // and dropping an incomplete one would delete the item an author just
+    // added, before they could get as far as choosing its page.
+    items: after.map((row) => ({ row, path: readAuthoredPath(cellOf(row)) })),
   };
+}
+
+/**
+ * Puts back any item row that did not become a card - no page picked yet, past
+ * the four the layout holds, or filtered out for being the current page.
+ *
+ * Editor only. These rows still hold the item's instrumentation, so discarding
+ * them would take the item out of the content tree; on the published site they
+ * are genuinely nothing and are dropped.
+ */
+function retainUnusedItems(block, itemRows, consumed) {
+  if (!block.hasAttribute('data-aue-resource')) return;
+  itemRows
+    .filter(({ row }) => !consumed.has(row))
+    .forEach(({ row }) => {
+      row.classList.add('stories-pending-item');
+      block.appendChild(row);
+    });
 }
 
 /* -------------------------------------------------------------------------- */
@@ -258,9 +275,12 @@ export default async function decorate(block) {
 
   const pagePath = readAuthoredPath(cellOf(pathRow));
   const mode = (modeRow?.textContent || '').trim().toLowerCase();
-  const itemPaths = authoredItems.map((entry) => entry.path);
+  const itemPaths = authoredItems.map((entry) => entry.path).filter(Boolean);
   // Lets each rendered card reclaim the instrumentation of the row it came from.
-  const rowForPath = new Map(authoredItems.map((entry) => [entry.path, entry.row]));
+  const rowForPath = new Map(
+    authoredItems.filter((entry) => entry.path).map((entry) => [entry.path, entry.row]),
+  );
+  const consumedRows = new Set();
 
   if (mode === 'selection' && !itemPaths.length) {
     // An item with no page picked contributes no row, so "add a Story" would be
@@ -298,7 +318,9 @@ export default async function decorate(block) {
    */
   const reinstrument = (item, element) => {
     const row = rowForPath.get(item.aemPath) || rowForPath.get(item.path);
-    if (row) moveInstrumentation(row, element);
+    if (!row) return;
+    moveInstrumentation(row, element);
+    consumedRows.add(row);
   };
 
   const section = el('div', 'stories');
@@ -325,6 +347,7 @@ export default async function decorate(block) {
 
   block.textContent = '';
   block.appendChild(section);
+  retainUnusedItems(block, authoredItems, consumedRows);
 
   // The Sites model raised tooManyItems for authors who configured more than
   // four. The equivalent warning belongs in the editor only - on the published

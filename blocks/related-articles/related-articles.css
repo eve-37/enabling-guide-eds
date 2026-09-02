@@ -234,3 +234,25 @@
     display: flex;
   }
 }
+
+/*
+ * Universal Editor only. An Article item with no page picked renders nothing,
+ * so its row is kept as a visible slot - otherwise the author has an item in
+ * the content tree with nothing to click in the canvas.
+ */
+.related-articles .rel-pending-item {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border: 1px dashed var(--rel-border);
+  border-radius: 8px;
+  font-size: var(--body-font-size-xs);
+  color: var(--dark-color);
+}
+
+.related-articles .rel-pending-item::before {
+  content: "Article — pick a page for this item";
+}
+
+.related-articles .rel-pending-item > div {
+  display: none;
+}

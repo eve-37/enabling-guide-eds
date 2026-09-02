@@ -199,3 +199,25 @@
     display: none;
   }
 }
+
+/*
+ * Universal Editor only. A Story item with no page picked renders nothing, so
+ * its row is kept as a visible slot - otherwise the author has an item in the
+ * content tree with nothing to click in the canvas.
+ */
+.stories-listing .stories-pending-item {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border: 1px dashed var(--story-rule);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--story-body-grey);
+}
+
+.stories-listing .stories-pending-item::before {
+  content: "Story — pick a page for this item";
+}
+
+.stories-listing .stories-pending-item > div {
+  display: none;
+}
