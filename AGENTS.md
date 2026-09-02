@@ -123,6 +123,56 @@ Use `curl` and `console.log` to inspect the HTML delivered by the backend and th
 
 Each block should be self-contained and re-useable, with CSS and JS files following the naming convention: `blockname.css`, `blockname.js`. Blocks should be responsive and accessible by default.
 
+#### Naming: the folder must match the block name, not the definition id
+
+This site is authored in the Universal Editor, so a block's name comes from `template.name` in its
+`_<block>.json`. EDS slugifies that name to derive both the block's CSS class and the path it loads
+assets from — `"name": "Related Articles"` resolves to `/blocks/related-articles/related-articles.js`.
+A folder named after the (often singular) definition `id` returns 404, `decorate()` never runs, and the
+block renders as raw stacked rows. That looks like a content or publishing problem, so check the file
+first:
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' \
+  "https://main--enabling-guide-eds--eve-37.aem.page/blocks/<slug>/<slug>.js"
+```
+
+When renaming a folder to fix this, leave the definition and model `id` unchanged — authored instances
+store `model: "<id>"`, and changing it breaks the properties rail on blocks already placed on pages.
+
+#### Read rows by content, not by index
+
+The row count does not always equal the field count. A text field named `<image>Alt` is rendered by AEM
+as the `alt` attribute of the image field it names and gets no row of its own, so a five-field model
+arrives as four rows. Positional destructuring then reads every field after the image from the wrong
+cell — usually surfacing as a block that renders empty rather than as an obvious error.
+
+Identify rows by what they hold: the row containing a `<picture>`/`<img>` is the image, the row that
+parses as a `/content/` path is the pathfield, the row matching a known keyword is the select. Only the
+first field is safely positional. `blocks/related-articles/related-articles.js` has a worked example in
+`readRows()`.
+
+To see the real structure, read the author-rendered HTML rather than inferring it from the model:
+`GET /content/enabling-guide-eds/<page>.html` on the author instance.
+
+#### Blocks backed by AEM data
+
+Some blocks fetch page properties from AEM at runtime, because EDS has no equivalent of the Core List
+component. The endpoint is a resource-type-bound Sling servlet in the `enabling-guide` repo, reached at
+`/content/enablingguide-api.<selector>.json/<page path>` with the path in the **suffix** so the response
+stays cacheable. `page-details` and `related-articles` both use it.
+
+- Use `getBasePathBasedOnEnv()` from `scripts/utils.js` for the origin — publish on aem.page/aem.live
+  and localhost, relative in production.
+- Send no custom headers. A plain GET is CORS-simple, so no preflight fires.
+- Do not use `createOptimizedPicture` on DAM images; AEM ignores the EDS media bus query parameters.
+- Responses are cached for `cacheMaxAge` (300s) and page activation does **not** invalidate them, so a
+  newly published page can be missing from a listing for a few minutes. Append `?cb=1` when verifying.
+- Filtering the current page out of a listing happens here, not in the servlet — the response is cached
+  by path and selector and cannot know which page is asking.
+- Render a placeholder when a block is unconfigured and `block.hasAttribute('data-aue-resource')` is
+  true. An empty block cannot be clicked, leaving the author no way back into the dialog.
+
 ### Three-Phase Page Loading
 
 Pages are progressively loaded in three phases to maximize performance. This process begins when `loadPage` from scripts.js is called.
