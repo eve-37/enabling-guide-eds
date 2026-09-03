@@ -1,0 +1,18 @@
+.article-info.block .article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--text-color);
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.article-info.block .article-words {
+  color: var(--dark-color);
+}
+
+.article-info.block .article-words strong {
+  color: var(--text-color);
+}

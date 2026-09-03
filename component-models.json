@@ -157,6 +157,20 @@
     ]
   },
   {
+    "id": "article-info",
+    "fields": [
+      {
+        "component": "date-time",
+        "name": "date",
+        "label": "Article Created Date",
+        "description": "Shown as the article date. Left empty, the block shows today's date.",
+        "valueType": "date",
+        "displayFormat": "YYYY-MM-DD",
+        "valueFormat": "YYYY-MM-DD"
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
