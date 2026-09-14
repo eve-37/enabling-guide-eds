@@ -1,8 +1,20 @@
 .site-header.block {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  width: 100%;
   box-sizing: border-box;
+}
+
+/*
+ * Mounted in the page header the row is already the full width of the page, so it needs
+ * no breakout. Inside main it sits in the 1200px content column - viewing /nav directly,
+ * or if an author drops the block into a section - and has to break out of it.
+ *
+ * The breakout is deliberately scoped rather than applied to the block everywhere: 100vw
+ * counts the vertical scrollbar, so in the header it made the row wider than the page and
+ * scrolled the whole document sideways.
+ */
+main .site-header.block {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
 }
 
 /* --- top bar: logo, hamburger, authored links ------------------------- */

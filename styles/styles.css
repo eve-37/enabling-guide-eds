@@ -106,7 +106,10 @@ body.appear {
 }
 
 header {
-  height: var(--nav-height);
+  /* Reserves the row before the header block loads, so the page does not shift, but
+     still grows to whatever the Site Header needs. A fixed height clipped the section
+     nav out of the element's box and let the first section render over it. */
+  min-height: var(--nav-height);
 }
 
 header .header,
