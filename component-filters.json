@@ -30,7 +30,6 @@
       "cta-teaser",
       "event-listing",
       "hero-carousel",
-      "my-guide",
       "partner-offer",
       "section-navigation",
       "site-footer",
@@ -60,8 +59,7 @@
       "title",
       "cta-button",
       "cta-teaser",
-      "content-header",
-      "my-guide"
+      "content-header"
     ]
   },
   {
