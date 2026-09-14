@@ -1,20 +1,12 @@
-footer {
-  background-color: var(--light-color);
-  font-size: var(--body-font-size-xs);
-}
+/*
+ * The footer block only mounts the /footer fragment; the Site Footer block inside it owns
+ * every bit of the markup and styling. See blocks/site-footer/site-footer.css.
+ *
+ * The boilerplate styles that used to live here (a footer background and max-width
+ * wrapper, footer .footer p) were removed because they constrained and recoloured the
+ * Site Footer. Add nothing here that is not strictly about the footer mount point itself.
+ */
 
-footer .footer > div {
-  margin: auto;
-  max-width: 1200px;
-  padding: 40px 24px 24px;
-}
-
-footer .footer p {
-  margin: 0;
-}
-
-@media (width >= 900px) {
-  footer .footer > div {
-    padding: 40px 32px 24px;
-  }
+footer .footer {
+  display: contents;
 }
