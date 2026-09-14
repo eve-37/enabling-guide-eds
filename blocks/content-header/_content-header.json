@@ -1,0 +1,74 @@
+{
+  "definitions": [
+    {
+      "title": "Content Header",
+      "id": "content-header",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Content Header",
+              "model": "content-header",
+              "icon": "",
+              "heading": "",
+              "description": "",
+              "ctaLink": "",
+              "ctaLinkText": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "content-header",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "icon",
+          "label": "Content Header Icon",
+          "description": "Hidden below 991px, as in the Sites component.",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "iconAlt",
+          "label": "Icon alternative text",
+          "description": "Leave empty to reuse the title, which is what the Sites component did.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "heading",
+          "label": "Title",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text-area",
+          "name": "description",
+          "label": "Description",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "ctaLink",
+          "label": "CTA Link",
+          "valueType": "string",
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "text",
+          "name": "ctaLinkText",
+          "label": "CTA Label",
+          "description": "Named ctaLinkText, not ctaLabel, so it collapses into the CTA link's own cell - a block is capped at four cells.",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

@@ -1,0 +1,43 @@
+.cta-button.block .btn-center {
+  text-align: center;
+}
+
+.cta-button.block .btn-purple {
+  display: inline-block;
+  background: var(--poc-purple);
+  color: var(--poc-off-white);
+  padding: 16px 28px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.cta-button.block .btn-purple:hover {
+  background: var(--poc-purple);
+  color: var(--poc-off-white);
+  text-decoration: underline;
+}
+
+.cta-button.block .cta-button-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 1rem;
+  color: #6e6e6e;
+  border: 0.125rem solid rgb(128 128 128 / 50%);
+  background-color: rgb(255 255 255 / 75%);
+  box-sizing: border-box;
+  font-size: 0.875rem;
+}
+
+@media (width <= 991.98px) {
+  .cta-button.block .btn-purple {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
+}

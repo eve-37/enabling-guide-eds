@@ -1,0 +1,190 @@
+.event-listing.block .join-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* The left column is the positioning context the quote card overlaps into. */
+.event-listing.block .join-left {
+  position: relative;
+  min-height: 380px;
+}
+
+.event-listing.block .image-banner {
+  position: relative;
+  margin-left: auto;
+  width: 75%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/*
+ * The Sites markup set the photo as a CSS background through a --join-bg custom
+ * property. It is a real <img> here, so it can carry alt text and lazy-load;
+ * object-fit does what background-size: cover did.
+ */
+.event-listing.block .image-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.event-listing.block .join-quote {
+  position: absolute;
+  left: 0;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 40%;
+  max-width: 340px;
+  min-width: 240px;
+  background: var(--poc-purple);
+  border-radius: 10px;
+  padding: 24px 24px 32px;
+  box-sizing: border-box;
+  color: #fff;
+  z-index: 2;
+  box-shadow: 4px 4px 20px rgb(0 0 0 / 20%);
+  margin: 0;
+}
+
+.event-listing.block .join-quote p {
+  color: #fff;
+  margin: 0;
+}
+
+.event-listing.block .join-quote hr {
+  border: none;
+  border-top: 1px solid rgb(255 255 255 / 30%);
+  margin: 16px 0;
+}
+
+.event-listing.block .quote-img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+  color: var(--poc-green-bright);
+  display: block;
+}
+
+/* --- events list ------------------------------------------------------ */
+
+.event-listing.block .join-right {
+  padding-top: 4px;
+}
+
+.event-listing.block .event-list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.event-listing.block .event-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 18px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.event-listing.block .event-item:first-child {
+  padding-top: 0;
+}
+
+.event-listing.block .event-item:last-child {
+  border: none;
+}
+
+.event-listing.block .event-date {
+  border: 2px solid var(--poc-pink-magenta);
+  border-radius: 6px;
+  width: 54px;
+  text-align: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.event-listing.block .event-date .month {
+  display: block;
+  background: var(--poc-pink-magenta);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 0;
+}
+
+.event-listing.block .event-date .day {
+  display: block;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--poc-pink-magenta);
+  padding: 5px 0;
+  line-height: 1;
+}
+
+.event-listing.block .event-badge {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #333;
+}
+
+.event-listing.block .event-info h4 {
+  font-size: 15px;
+  color: var(--poc-link-blue);
+  font-weight: 600;
+  margin: 12px 0;
+  line-height: 1.35;
+}
+
+.event-listing.block .event-info p {
+  font-size: 13px;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1;
+}
+
+.event-listing.block .event-listing-placeholder {
+  padding: 1rem;
+  color: #6e6e6e;
+  font-size: 0.875rem;
+}
+
+@media (width <= 991px) {
+  .event-listing.block .join-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Below this the three pieces stack - photo, quote, events - with no overlap. */
+@media (width <= 959.98px) {
+  .event-listing.block .join-left {
+    position: static;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .event-listing.block .image-banner {
+    width: 100%;
+    margin-left: 0;
+    order: -1;
+  }
+
+  .event-listing.block .join-quote {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}

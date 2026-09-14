@@ -1,0 +1,95 @@
+.site-footer.block {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+}
+
+.site-footer.block footer {
+  background: #1e1e2e;
+  color: #fff;
+  padding: 32px 40px;
+  border-top: 4px solid var(--poc-grayish-purple);
+  box-sizing: border-box;
+}
+
+.site-footer.block .footer-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.site-footer.block .copyright {
+  font-size: 12px;
+  color: #888;
+  flex: 0 0 25%;
+  padding-top: 4px;
+}
+
+/*
+ * The Sites markup wrapped at fixed points using four empty .flex-break divs
+ * that were toggled on at each breakpoint. flex-wrap does the same job here
+ * without the placeholder elements.
+ */
+.site-footer.block .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 40px;
+  flex: 1;
+}
+
+.site-footer.block .footer-links-group {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.site-footer.block .footer-links a {
+  color: #fff;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.site-footer.block .footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.site-footer.block .powered {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.site-footer.block .footer-logo img {
+  display: block;
+  max-height: 44px;
+  width: auto;
+}
+
+.site-footer.block .site-footer-placeholder {
+  padding: 1rem;
+  color: #6e6e6e;
+  font-size: 0.875rem;
+}
+
+@media (width <= 991px) {
+  .site-footer.block footer {
+    padding: 24px 20px;
+  }
+
+  .site-footer.block .footer-inner {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .site-footer.block .copyright {
+    flex: 0 0 auto;
+    order: 1;
+  }
+}

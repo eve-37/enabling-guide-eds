@@ -1,0 +1,70 @@
+{
+  "definitions": [
+    {
+      "title": "CTA Button",
+      "id": "cta-button",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "CTA Button",
+              "model": "cta-button",
+              "label": "",
+              "linkURL": "",
+              "linkTarget": "",
+              "align": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "cta-button",
+      "fields": [
+        {
+          "component": "text",
+          "name": "label",
+          "label": "Label",
+          "description": "Text on the button. Required - the button renders nothing without it.",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "aem-content",
+          "name": "linkURL",
+          "label": "Link",
+          "description": "Page the button opens. Required.",
+          "valueType": "string",
+          "required": true,
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "select",
+          "name": "linkTarget",
+          "label": "Open in",
+          "valueType": "string",
+          "value": "",
+          "options": [
+            { "name": "Same tab", "value": "" },
+            { "name": "New tab", "value": "_blank" }
+          ]
+        },
+        {
+          "component": "select",
+          "name": "align",
+          "label": "Alignment",
+          "valueType": "string",
+          "value": "",
+          "options": [
+            { "name": "Left", "value": "" },
+            { "name": "Centred", "value": "center" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

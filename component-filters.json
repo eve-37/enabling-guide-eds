@@ -21,13 +21,47 @@
       "related-events",
       "event-fragment",
       "stories-listing",
-      "article-info"
+      "article-info",
+      "back-to-top",
+      "breadcrumb",
+      "column-control",
+      "content-header",
+      "cta-button",
+      "cta-teaser",
+      "event-listing",
+      "hero-carousel",
+      "my-guide",
+      "partner-offer",
+      "section-navigation",
+      "site-footer",
+      "site-header",
+      "skip-to-content",
+      "support-listing"
     ]
   },
   {
     "id": "cards",
     "components": [
       "card"
+    ]
+  },
+  {
+    "id": "column-control",
+    "components": [
+      "column-control-column"
+    ]
+  },
+  {
+    "id": "column-control-column",
+    "components": [
+      "text",
+      "image",
+      "button",
+      "title",
+      "cta-button",
+      "cta-teaser",
+      "content-header",
+      "my-guide"
     ]
   },
   {
@@ -46,15 +80,51 @@
     ]
   },
   {
+    "id": "event-listing",
+    "components": [
+      "event-listing-quote"
+    ]
+  },
+  {
+    "id": "hero-carousel",
+    "components": [
+      "hero-carousel-slide"
+    ]
+  },
+  {
+    "id": "partner-offer",
+    "components": [
+      "partner-offer-card"
+    ]
+  },
+  {
     "id": "related-article",
     "components": [
       "related-article-item"
     ]
   },
   {
+    "id": "site-footer",
+    "components": [
+      "site-footer-link"
+    ]
+  },
+  {
+    "id": "site-header",
+    "components": [
+      "site-header-link"
+    ]
+  },
+  {
     "id": "stories-listing",
     "components": [
       "stories-listing-item"
+    ]
+  },
+  {
+    "id": "support-listing",
+    "components": [
+      "support-listing-item"
     ]
   }
 ]

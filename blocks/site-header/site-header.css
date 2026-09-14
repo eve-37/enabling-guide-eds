@@ -1,0 +1,327 @@
+.site-header.block {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  box-sizing: border-box;
+}
+
+/* --- top bar: logo, hamburger, authored links ------------------------- */
+
+.site-header.block header {
+  background: #fff;
+  padding: 12px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-header.block .logo {
+  display: flex;
+  padding-left: 18px;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.site-header.block .logo-img img,
+.site-header.block img.logo-img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
+
+.site-header.block .nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.site-header.block .nav-toggle-bar {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background: var(--poc-navlink-blue);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.site-header.block .main-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.site-header.block .main-nav > a {
+  color: var(--poc-navlink-blue);
+  text-decoration: none;
+  font-size: 13.5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.site-header.block .main-nav > a:hover {
+  text-decoration: underline;
+}
+
+.site-header.block .main-nav > a.active {
+  font-weight: 600;
+}
+
+/* --- section nav ------------------------------------------------------ */
+
+.site-header.block .top-nav {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  justify-content: center;
+  background: #fff;
+}
+
+.site-header.block .nav-dropdown {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-right: 40px;
+  padding-left: 40px;
+}
+
+/* The search control takes a fixed slot rather than an equal share. */
+.site-header.block .top-nav .nav-dropdown:last-child {
+  flex: 0 0 40px;
+  padding-right: 12px;
+  padding-left: 12px;
+}
+
+.site-header.block .nav-dropdown-toggle {
+  color: var(--poc-navlink-blue);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 13px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.site-header.block .nav-dropdown-toggle:hover {
+  color: var(--poc-purple);
+  text-decoration: underline;
+}
+
+/*
+ * One icon for both states. The Sites component swapped between two SVG files
+ * and recoloured each with a filter chain; inheriting currentColor and rotating
+ * does the same job.
+ */
+.site-header.block .nav-arrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.site-header.block .nav-dropdown.open .nav-dropdown-toggle {
+  color: var(--poc-purple);
+}
+
+.site-header.block .nav-dropdown.open .nav-arrow {
+  transform: rotate(180deg);
+}
+
+.site-header.block .nav-dropdown.active {
+  box-shadow: inset 0 -3px 0 var(--poc-pink-mid);
+}
+
+.site-header.block .nav-dropdown.active .nav-dropdown-toggle {
+  color: var(--poc-pink-mid);
+}
+
+.site-header.block .nav-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  background: #fff;
+  border-top: 1px solid var(--poc-pink);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+  z-index: 200;
+}
+
+.site-header.block .nav-dropdown.open .nav-dropdown-menu {
+  display: block;
+}
+
+.site-header.block .nav-dropdown .nav-dropdown-menu a {
+  display: block;
+  padding: 16px 20px;
+  color: var(--poc-navlink-blue);
+  text-decoration: none;
+  font-size: 14px;
+  text-align: left;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.site-header.block .nav-dropdown .nav-dropdown-menu a:last-child {
+  border-bottom: none;
+}
+
+.site-header.block .nav-dropdown .nav-dropdown-menu a.active,
+.site-header.block .nav-dropdown .nav-dropdown-menu a:hover,
+.site-header.block .nav-dropdown .nav-dropdown-menu a:focus-visible {
+  background: #bb45a4;
+  color: #fff;
+}
+
+.site-header.block .search-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.site-header.block .search-btn {
+  color: #555;
+}
+
+.site-header.block .search-btn:hover {
+  color: var(--poc-purple);
+}
+
+/* --- mobile ----------------------------------------------------------- */
+
+@media (width <= 991px) {
+  .site-header.block header {
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 12px 0;
+    row-gap: 12px;
+    border-bottom: none;
+  }
+
+  .site-header.block .nav-toggle {
+    display: flex;
+  }
+
+  .site-header.block .nav-toggle.is-open .nav-toggle-bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .site-header.block .nav-toggle.is-open .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.block .nav-toggle.is-open .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .site-header.block .main-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    box-sizing: border-box;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    border-top: 1px solid var(--poc-pink-magenta);
+  }
+
+  .site-header.block .main-nav.is-open {
+    max-height: 200vh;
+  }
+
+  .site-header.block .main-nav > a {
+    width: 100%;
+    padding: 16px 12px;
+    white-space: normal;
+    box-sizing: border-box;
+  }
+
+  /* The section nav is cloned into the hamburger, so the bar itself goes. */
+  .site-header.block .top-nav {
+    display: none;
+  }
+
+  .site-header.block .injected-dropdown {
+    width: 100%;
+    box-sizing: border-box;
+    display: block;
+    position: static;
+    padding: 0;
+  }
+
+  .site-header.block .injected-dropdown .nav-dropdown-toggle {
+    width: 100%;
+    padding: 16px 12px;
+    justify-content: space-between;
+    gap: 8px;
+    white-space: normal;
+    box-sizing: border-box;
+    font-size: 13.5px;
+  }
+
+  .site-header.block .injected-dropdown .nav-dropdown-menu {
+    position: static;
+    display: none;
+    border: none;
+    box-shadow: none;
+    min-width: 0;
+    background: none;
+  }
+
+  .site-header.block .injected-dropdown.open .nav-dropdown-menu {
+    display: block;
+  }
+
+  .site-header.block .injected-dropdown.open .nav-dropdown-toggle {
+    background-color: var(--poc-pink-muted);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .site-header.block .injected-dropdown .nav-dropdown-menu a {
+    padding: 16px 16px 16px 24px;
+    font-size: 13px;
+  }
+
+  .site-header.block .injected-dropdown .nav-dropdown-menu a:hover {
+    background: none;
+    color: var(--poc-purple);
+    text-decoration: underline;
+  }
+}
+
+@media (width >= 576px) {
+  .site-header.block {
+    width: 95vw;
+    margin-left: calc(50% - 47.5vw);
+    margin-right: calc(50% - 47.5vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header.block .nav-toggle-bar,
+  .site-header.block .nav-arrow,
+  .site-header.block .main-nav {
+    transition: none;
+  }
+}

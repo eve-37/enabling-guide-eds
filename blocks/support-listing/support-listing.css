@@ -1,0 +1,124 @@
+.support-listing.block .info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.support-listing.block .info-card {
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid var(--poc-purple);
+  padding: 32px 24px 30px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.support-listing.block .info-card h3 {
+  margin: 0 0 16px;
+}
+
+.support-listing.block .info-card p {
+  line-height: 1.6;
+  margin: 0 30px 16px;
+}
+
+/* The wrapper drops out of the layout on desktop so the card's own flex
+   ordering can pull the icon above the heading. */
+.support-listing.block .info-card-text {
+  display: contents;
+}
+
+.support-listing.block .info-card-icon,
+.support-listing.block .info-card-icon img {
+  order: -1;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 28px;
+}
+
+.support-listing.block .info-card .btn-purple {
+  display: inline-block;
+  background: var(--poc-purple);
+  color: #fff;
+  padding: 16px 28px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+  align-self: center;
+
+  /* Pushes the button to the bottom however tall the card's text is. */
+  margin-top: auto;
+}
+
+.support-listing.block .info-card .btn-purple:hover {
+  background: var(--poc-pink);
+}
+
+.support-listing.block .support-listing-placeholder {
+  padding: 1rem;
+  color: #6e6e6e;
+  font-size: 0.875rem;
+}
+
+@media (width <= 991px) {
+  .support-listing.block .info-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .support-listing.block .info-card {
+    display: grid;
+    grid-template-columns: 3fr 1.5fr;
+    grid-template-areas:
+      "text image"
+      "btn btn";
+    gap: 12px 16px;
+    text-align: left;
+    align-items: start;
+    padding: 20px;
+  }
+
+  /* Overrides the desktop display:contents so the text can occupy one area. */
+  .support-listing.block .info-card-text {
+    display: block;
+    grid-area: text;
+  }
+
+  .support-listing.block .info-card-text h3,
+  .support-listing.block .info-card-text p {
+    margin: 0;
+  }
+
+  .support-listing.block .info-card-icon,
+  .support-listing.block .info-card-icon img {
+    grid-area: image;
+    place-self: start end;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 120px;
+    margin: 0;
+    object-fit: contain;
+  }
+
+  .support-listing.block .info-card .btn-purple {
+    grid-area: btn;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .support-listing.block .info-card .btn-purple {
+    transition: none;
+  }
+}

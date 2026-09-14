@@ -1,0 +1,144 @@
+.back-to-top.block .scroll-top-btn {
+  position: fixed;
+  bottom: 197px;
+  right: 24px;
+  background: #ada6e4;
+  color: #fff;
+  border: none;
+  border-radius: 0.3rem 0.3rem 0 0;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: none;
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-to-top.block .scroll-top-btn.visible {
+  display: flex;
+}
+
+.back-to-top.block .scroll-top-btn:hover {
+  background: var(--poc-pink-muted);
+}
+
+.back-to-top.block .scroll-top-btn-icon,
+.back-to-top.block .scroll-top-btn-icon img,
+.back-to-top.block .scroll-top-share-btn-icon,
+.back-to-top.block .scroll-top-share-btn-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
+
+  /* The authored icons are dark artwork on transparent; the buttons are
+     coloured, so the Sites component forced them white this way. */
+  filter: brightness(0) invert(1);
+}
+
+.back-to-top.block .scroll-top-share-btn {
+  position: fixed;
+  bottom: 145px;
+  right: 24px;
+  background: #ada6e4;
+  color: #fff;
+  border: none;
+  border-radius: 0 0 0.3rem 0.3rem;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.back-to-top.block .scroll-top-share-btn:hover {
+  background: var(--poc-pink-muted);
+}
+
+/* The Sites component also tinted the button while the popup was hovered. */
+.back-to-top.block .scroll-top-share-container:hover .scroll-top-share-btn {
+  background: var(--poc-pink-muted);
+}
+
+.back-to-top.block .share-popup {
+  position: fixed;
+  bottom: 145px;
+  right: 80px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 8px 12px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 18%);
+  z-index: 200;
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.4s ease, visibility 0s linear 0.4s;
+}
+
+/* Hovering the button or the popup keeps it open; focus-within keeps it
+   reachable by keyboard, which the Sites component did not support. */
+.back-to-top.block .scroll-top-share-container:hover .share-popup,
+.back-to-top.block .scroll-top-share-container:focus-within .share-popup {
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
+  transition: transform 0.4s ease, visibility 0s linear 0s;
+}
+
+/* Bridges the gap between the button and the popup so the pointer can cross
+   without the popup closing. */
+.back-to-top.block .share-popup::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -20px;
+  width: 20px;
+  height: 100%;
+}
+
+.back-to-top.block .share-opt {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  color: var(--poc-grayish-purple);
+}
+
+.back-to-top.block .share-opt:hover,
+.back-to-top.block .share-opt:focus-visible {
+  background: #f0eeff;
+}
+
+.back-to-top.block .share-opt svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+.back-to-top.block .share-opt.copied {
+  background: var(--poc-green-bright);
+}
+
+.back-to-top.block .share-opt.copy-failed {
+  background: #f6d3d3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top.block .share-popup,
+  .back-to-top.block .share-opt {
+    transition: none;
+  }
+}

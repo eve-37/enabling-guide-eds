@@ -151,6 +151,10 @@
           {
             "name": "Highlight",
             "value": "highlight"
+          },
+          {
+            "name": "In section navigation",
+            "value": "nav-section"
           }
         ]
       }
@@ -167,6 +171,127 @@
         "valueType": "date",
         "displayFormat": "YYYY-MM-DD",
         "valueFormat": "YYYY-MM-DD"
+      }
+    ]
+  },
+  {
+    "id": "back-to-top",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "scrollImg",
+        "label": "Scroll image",
+        "description": "Icon on the scroll-to-top button. Rendered white, as in the Sites component.",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "reference",
+        "name": "shareImg",
+        "label": "Share image",
+        "description": "Icon on the share button. Rendered white.",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "multiselect",
+        "name": "socialMediaItems",
+        "label": "Social Media Options",
+        "description": "Leave empty to show the scroll-to-top button on its own.",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Copy",
+            "value": "Copy"
+          },
+          {
+            "name": "Email",
+            "value": "Email"
+          },
+          {
+            "name": "Facebook",
+            "value": "Facebook"
+          },
+          {
+            "name": "Telegram",
+            "value": "Telegram"
+          },
+          {
+            "name": "Whatsapp",
+            "value": "Whatsapp"
+          },
+          {
+            "name": "LinkedIn",
+            "value": "LinkedIn"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "breadcrumb",
+    "fields": [
+      {
+        "component": "select",
+        "name": "startLevel",
+        "label": "Start level",
+        "description": "How many leading path segments to leave out. 0 starts at the site home; 1 starts at the first section, dropping Home from the trail.",
+        "valueType": "string",
+        "value": "0",
+        "options": [
+          {
+            "name": "0 - include Home",
+            "value": "0"
+          },
+          {
+            "name": "1",
+            "value": "1"
+          },
+          {
+            "name": "2",
+            "value": "2"
+          },
+          {
+            "name": "3",
+            "value": "3"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "hideCurrent",
+        "label": "Current page",
+        "description": "The Sites component always showed the current page, unlinked and marked as current.",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Shown",
+            "value": ""
+          },
+          {
+            "name": "Hidden",
+            "value": "hide"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "showHidden",
+        "label": "Pages marked noindex",
+        "description": "A page carrying a noindex robots tag is treated as hidden. This is the Edge Delivery equivalent of AEM's Hide in Navigation, which is not published to the site.",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Left out",
+            "value": ""
+          },
+          {
+            "name": "Included",
+            "value": "show"
+          }
+        ]
       }
     ]
   },
@@ -190,6 +315,41 @@
     ]
   },
   {
+    "id": "column-control",
+    "fields": [
+      {
+        "component": "select",
+        "name": "layout",
+        "label": "Column Layout",
+        "description": "Widths out of twelve, applied to the columns in order. Add one Column per number.",
+        "valueType": "string",
+        "value": "6-6",
+        "options": [
+          {
+            "name": "3 Columns (4-4-4)",
+            "value": "4-4-4"
+          },
+          {
+            "name": "2 Columns (6-6)",
+            "value": "6-6"
+          },
+          {
+            "name": "2 Columns (8-4)",
+            "value": "8-4"
+          },
+          {
+            "name": "2 Columns (4-8)",
+            "value": "4-8"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column-control-column",
+    "fields": []
+  },
+  {
     "id": "columns",
     "fields": [
       {
@@ -205,6 +365,152 @@
         "name": "rows",
         "value": "",
         "label": "Rows"
+      }
+    ]
+  },
+  {
+    "id": "content-header",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "icon",
+        "label": "Content Header Icon",
+        "description": "Hidden below 991px, as in the Sites component.",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "iconAlt",
+        "label": "Icon alternative text",
+        "description": "Leave empty to reuse the title, which is what the Sites component did.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Title",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text-area",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "ctaLink",
+        "label": "CTA Link",
+        "valueType": "string",
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "text",
+        "name": "ctaLinkText",
+        "label": "CTA Label",
+        "description": "Named ctaLinkText, not ctaLabel, so it collapses into the CTA link's own cell - a block is capped at four cells.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "cta-button",
+    "fields": [
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Label",
+        "description": "Text on the button. Required - the button renders nothing without it.",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "linkURL",
+        "label": "Link",
+        "description": "Page the button opens. Required.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "select",
+        "name": "linkTarget",
+        "label": "Open in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "align",
+        "label": "Alignment",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Left",
+            "value": ""
+          },
+          {
+            "name": "Centred",
+            "value": "center"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cta-teaser",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "required": true,
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image alternative text",
+        "description": "The Sites component hardcoded \"Education Icon\" here, which was wrong on every other teaser. Left empty, the title is used.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "richtext",
+        "name": "description",
+        "label": "Description",
+        "description": "Shown as the teaser's subheadline.",
+        "valueType": "string",
+        "required": true
       }
     ]
   },
@@ -240,12 +546,131 @@
     ]
   },
   {
+    "id": "event-listing",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "pagePath",
+        "label": "Events source",
+        "description": "In Child pages mode, the parent whose children are listed. In Single page mode, one event page.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "select",
+        "name": "mode",
+        "label": "Mode",
+        "valueType": "string",
+        "value": "children",
+        "options": [
+          {
+            "name": "Child pages",
+            "value": "children"
+          },
+          {
+            "name": "Single page",
+            "value": "page"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "event-listing-quote",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "quote",
+        "label": "Quote",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "personName",
+        "label": "Name",
+        "description": "Not called 'name': that key is reserved on the template for the block's own name, which is how Edge Delivery finds its JavaScript and CSS.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "position",
+        "label": "Position / Role",
+        "description": "For example, Caregiver.",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "description": "Photo behind the quote card.",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "fragment",
     "fields": [
       {
         "component": "aem-content",
         "name": "reference",
         "label": "Reference"
+      }
+    ]
+  },
+  {
+    "id": "hero-carousel-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Background Image",
+        "valueType": "string",
+        "required": true,
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Heading",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "subtitle",
+        "label": "Subtitle",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "ctaLink",
+        "label": "CTA Link",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "text",
+        "name": "ctaLinkText",
+        "label": "CTA Text",
+        "description": "Named ctaLinkText, not ctaText, so it collapses into the CTA link's own cell - a slide is capped at four cells.",
+        "valueType": "string",
+        "required": true
       }
     ]
   },
@@ -301,6 +726,79 @@
           {
             "name": "Child pages of the selected page",
             "value": "children"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "partner-offer",
+    "fields": [
+      {
+        "component": "text-area",
+        "name": "paragraph",
+        "label": "Paragraph Text",
+        "description": "Revealed word by word as the reader scrolls through the section.",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "partner-offer-card",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Alt Text",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "text-area",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "cta_link",
+        "label": "CTA Link",
+        "description": "The three cta_ fields share one cell by the element-grouping convention, which keeps the card within the four-cell limit.",
+        "valueType": "string",
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "text",
+        "name": "cta_text",
+        "label": "CTA Text",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "cta_newTab",
+        "label": "Open CTA in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
           }
         ]
       }
@@ -428,6 +926,399 @@
     ]
   },
   {
+    "id": "section-navigation",
+    "fields": [
+      {
+        "component": "text",
+        "name": "label",
+        "label": "Label",
+        "description": "Text on the closed menu button. Sections join this menu by ticking 'In section navigation' under their own Style, and each is labelled by its first heading.",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "site-footer",
+    "fields": [
+      {
+        "component": "text",
+        "name": "copyright",
+        "label": "Copyright",
+        "description": "Was hardcoded to \"© 2025 Enabling Guide. All Rights Reserved.\" in the Sites component, so it needed a code change every January.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "poweredBy",
+        "label": "Logo lead-in text",
+        "description": "Shown beside the logo. Was hardcoded to \"Powered by\".",
+        "valueType": "string"
+      },
+      {
+        "component": "reference",
+        "name": "logo",
+        "label": "Logo",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "logoAlt",
+        "label": "Logo alternative text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "site-footer-link",
+    "fields": [
+      {
+        "component": "text",
+        "name": "link",
+        "label": "URL",
+        "description": "A full URL for an external service, or a site path such as /support. A plain text field rather than a page picker, because most of these point outside the site.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Label",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "grouped",
+        "label": "Placement",
+        "description": "Grouped links sit together in a tight row, as Site Map, Terms Of Use and Privacy Policy did. Standalone links each take their own slot.",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Standalone",
+            "value": ""
+          },
+          {
+            "name": "Grouped",
+            "value": "grouped"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "site-header",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "navigationRoot",
+        "label": "Navigation Root",
+        "description": "The page whose children become the section navigation. Two levels are shown, as in the Sites component.",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "reference",
+        "name": "logo",
+        "label": "Logo image",
+        "valueType": "string",
+        "required": true,
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "logoAlt",
+        "label": "Logo alternative text",
+        "description": "Was hardcoded to \"Enabling Guide by SG Enable\" in the Sites component.",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "logoLink",
+        "label": "Logo Link",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      }
+    ]
+  },
+  {
+    "id": "site-header-link",
+    "fields": [
+      {
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link",
+        "valueType": "string",
+        "required": true,
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "text",
+        "name": "linkText",
+        "label": "Label",
+        "description": "Named linkText so it collapses into the link's own cell.",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "skip-to-content",
+    "fields": [
+      {
+        "component": "select",
+        "name": "enableSkipTo",
+        "label": "Skip To… menu",
+        "valueType": "string",
+        "value": "true",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enableMainContent",
+        "label": "Main Content item",
+        "valueType": "string",
+        "value": "true",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "mainContentUrl",
+        "label": "Main Content URL",
+        "description": "Usually an in-page anchor such as #main.",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "mainContentNewTab",
+        "label": "Main Content opens in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enableSearch",
+        "label": "Search item",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "searchUrl",
+        "label": "Search URL",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "searchNewTab",
+        "label": "Search opens in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enablePageOutline",
+        "label": "Page Outline",
+        "description": "Lists this page's own section headings in the menu, built at runtime.",
+        "valueType": "string",
+        "value": "true",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enableSiteMap",
+        "label": "Site Map link",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "siteMapUrl",
+        "label": "Site Map URL",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "siteMapNewTab",
+        "label": "Site Map opens in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enableTextSize",
+        "label": "Text size controls",
+        "valueType": "string",
+        "value": "true",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "fontSizeSmall",
+        "label": "Small (px)",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "fontSizeMedium",
+        "label": "Medium (px)",
+        "description": "Also the size applied on load.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "fontSizeLarge",
+        "label": "Large (px)",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "enableContrast",
+        "label": "Contrast toggle",
+        "valueType": "string",
+        "value": "true",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "select",
+        "name": "enableAccessibility",
+        "label": "Accessibility link",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Shown",
+            "value": "true"
+          },
+          {
+            "name": "Hidden",
+            "value": ""
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "name": "accessibilityUrl",
+        "label": "Accessibility URL",
+        "valueType": "string"
+      },
+      {
+        "component": "select",
+        "name": "accessibilityNewTab",
+        "label": "Accessibility opens in",
+        "valueType": "string",
+        "value": "",
+        "options": [
+          {
+            "name": "Same tab",
+            "value": ""
+          },
+          {
+            "name": "New tab",
+            "value": "_blank"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "stories-listing",
     "fields": [
       {
@@ -472,6 +1363,53 @@
         "valueType": "string",
         "required": true,
         "rootPath": "/content/enabling-guide-eds"
+      }
+    ]
+  },
+  {
+    "id": "support-listing-item",
+    "fields": [
+      {
+        "component": "reference",
+        "name": "image",
+        "label": "Image",
+        "valueType": "string",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "name": "imageAlt",
+        "label": "Image alternative text",
+        "description": "Left empty, the card title is used - which is what the Sites component always did.",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text-area",
+        "name": "description",
+        "label": "Description",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "ctaLink",
+        "label": "Call to Action",
+        "valueType": "string",
+        "rootPath": "/content/enabling-guide-eds"
+      },
+      {
+        "component": "text",
+        "name": "ctaLinkText",
+        "label": "CTA Label",
+        "description": "Named ctaLinkText so it collapses into the link's own cell, keeping the card within the four-cell limit. The button appears only when both are set.",
+        "valueType": "string"
       }
     ]
   }

@@ -38,6 +38,27 @@
 
   /* nav height */
   --nav-height: 64px;
+
+  /*
+   * Palette carried over from the AEM Sites SCSS variables partial. The old
+   * names encoded their own hex ($button-purple-5041cd, $light-grey-E0E0E0), so
+   * these are the same values, not re-picked ones. Kept in one place the way the
+   * partial was, rather than repeated in every migrated block.
+   */
+  --poc-purple: #5041cd;
+  --poc-grayish-purple: #4a3d8f;
+  --poc-light-purple: #f5f3ff;
+  --poc-pink: #cd43ad;
+  --poc-pink-magenta: #e91e8c;
+  --poc-pink-mid: #c936a7;
+  --poc-pink-muted: #ca39a8;
+  --poc-green: #7cb834;
+  --poc-green-bright: #8dc63f;
+  --poc-link-blue: #2376d8;
+  --poc-navlink-blue: #004f9a;
+  --poc-dark-grey: #4a4a4a;
+  --poc-light-grey: #e0e0e0;
+  --poc-off-white: #fffcf7;
 }
 
 /* fallback fonts */

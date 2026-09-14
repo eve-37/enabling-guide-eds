@@ -1,0 +1,228 @@
+.partner-offer.block .partner-scroll-driver {
+  position: relative;
+  height: 200vh;
+}
+
+/* In the editor the scene is a fixed height so the component can be selected
+   without scroll-scrubbing through two viewports. */
+.partner-offer.block .partner-scroll-driver.edit-mode {
+  height: 500px;
+}
+
+.partner-offer.block .partner-sticky-scene {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.partner-offer.block .partner-sticky-scene.edit-mode {
+  height: 500px;
+}
+
+.partner-offer.block .partner-scene-bg {
+  position: absolute;
+  inset: 0;
+  background: #33abba;
+  transform: translateY(100%);
+  z-index: 0;
+}
+
+.partner-offer.block .partner-scene-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 clamp(3.5rem, 12vw, 20rem);
+  z-index: 1;
+}
+
+.partner-offer.block .partner-scene-text p.reveal-type {
+  font-weight: 400;
+  font-style: normal;
+  font-size: 56px;
+  line-height: 125%;
+  letter-spacing: 0;
+  text-align: center;
+  color: rgb(0 0 0 / 20%);
+  transition: color 0.3s ease;
+  margin: 0;
+}
+
+.partner-offer.block .partner-scene-text p.reveal-type.phase2 {
+  color: #fff;
+}
+
+.partner-offer.block .partner-scene-cards {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.partner-offer.block .partner-swipe-viewport {
+  width: 100%;
+  height: 100vh;
+  padding: 0 clamp(4rem, 12vw, 20rem);
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.partner-offer.block .partner-cards-grid {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 80px;
+  padding: 40px;
+  align-items: center;
+  box-sizing: border-box;
+  transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+  user-select: none;
+  cursor: grab;
+}
+
+.partner-offer.block .partner-cards-grid.dragging {
+  cursor: grabbing;
+}
+
+/* Suppresses the snap animation while the finger is still down, and for the
+   silent repositioning after a resize. */
+.partner-offer.block .partner-cards-grid.no-transition {
+  transition: none;
+}
+
+.partner-offer.block .partner-card {
+  width: 328px;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #fafafa;
+  border-radius: 24px;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 14%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transform: translateY(120px);
+  will-change: transform, opacity;
+  transition: box-shadow 0.3s ease;
+  flex: 0 0 auto;
+}
+
+.partner-offer.block .partner-card:hover {
+  box-shadow: 0 16px 40px rgb(0 0 0 / 22%);
+}
+
+.partner-offer.block .partner-card-img {
+  width: 312px;
+  height: 250px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ccc;
+  margin: 0 auto;
+}
+
+.partner-offer.block .partner-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.partner-offer.block .partner-card-content {
+  padding: 10px 12px 4px;
+  flex: 1;
+}
+
+.partner-offer.block .partner-card-title {
+  font-weight: 400;
+  margin-bottom: 6px;
+  color: #1a1a1a;
+  line-height: 125%;
+}
+
+.partner-offer.block .partner-card-desc {
+  font-weight: 400;
+  color: #484848;
+  line-height: 155%;
+}
+
+.partner-offer.block .partner-card-btn {
+  margin: 10px auto;
+  height: 40px;
+  width: 288px;
+  border-radius: 999px;
+  border: 1.5px solid #0096a9;
+  background: transparent;
+  color: #0096a9;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.partner-offer.block .partner-card-btn:hover,
+.partner-offer.block .partner-card-btn:focus-visible {
+  background: #0096a9;
+  color: #fff;
+  text-decoration: none;
+}
+
+.partner-offer.block .partner-offer-placeholder {
+  padding: 1rem;
+  color: #6e6e6e;
+  font-size: 0.875rem;
+}
+
+@media (width <= 600px) {
+  .partner-offer.block .partner-scene-text {
+    padding: 0 30px;
+  }
+
+  .partner-offer.block .partner-scene-text p.reveal-type {
+    font-size: 36px;
+  }
+
+  .partner-offer.block .partner-cards-grid {
+    gap: 40px;
+    padding: 40px;
+  }
+
+  .partner-offer.block .partner-card {
+    width: 240px;
+  }
+
+  .partner-offer.block .partner-card-img {
+    width: 224px;
+    height: 180px;
+  }
+
+  .partner-offer.block .partner-card-content {
+    padding: 10px 4px 4px;
+  }
+
+  .partner-offer.block .partner-card-btn {
+    height: 40px;
+    width: 216px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-offer.block .partner-cards-grid,
+  .partner-offer.block .partner-card,
+  .partner-offer.block .partner-card-btn,
+  .partner-offer.block .partner-scene-text p.reveal-type {
+    transition: none;
+  }
+}

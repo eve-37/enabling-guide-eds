@@ -1,0 +1,120 @@
+{
+  "definitions": [
+    {
+      "title": "Partner Offer",
+      "id": "partner-offer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Partner Offer",
+              "model": "partner-offer",
+              "filter": "partner-offer",
+              "paragraph": ""
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Partner Card",
+      "id": "partner-offer-card",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Partner Card",
+              "model": "partner-offer-card",
+              "image": "",
+              "imageAlt": "",
+              "title": "",
+              "description": "",
+              "cta_link": "",
+              "cta_text": "",
+              "cta_newTab": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "partner-offer",
+      "fields": [
+        {
+          "component": "text-area",
+          "name": "paragraph",
+          "label": "Paragraph Text",
+          "description": "Revealed word by word as the reader scrolls through the section.",
+          "valueType": "string"
+        }
+      ]
+    },
+    {
+      "id": "partner-offer-card",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "image",
+          "label": "Image",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Alt Text",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "title",
+          "label": "Title",
+          "valueType": "string"
+        },
+        {
+          "component": "text-area",
+          "name": "description",
+          "label": "Description",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "cta_link",
+          "label": "CTA Link",
+          "description": "The three cta_ fields share one cell by the element-grouping convention, which keeps the card within the four-cell limit.",
+          "valueType": "string",
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "text",
+          "name": "cta_text",
+          "label": "CTA Text",
+          "valueType": "string"
+        },
+        {
+          "component": "select",
+          "name": "cta_newTab",
+          "label": "Open CTA in",
+          "valueType": "string",
+          "value": "",
+          "options": [
+            { "name": "Same tab", "value": "" },
+            { "name": "New tab", "value": "_blank" }
+          ]
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "partner-offer",
+      "components": [
+        "partner-offer-card"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+.section-navigation.block .in-section-wrap {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.section-navigation.block .btn-in-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--poc-purple);
+  color: var(--poc-off-white);
+  border: none;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+/*
+ * One chevron, rotated. The Sites component swapped between arrow_up.png and
+ * arrow_down.png and forced them white with brightness(0) invert(1); inheriting
+ * currentColor removes both the second asset and the filter.
+ */
+.section-navigation.block .in-section-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.section-navigation.block .btn-in-section[aria-expanded="true"] .in-section-chevron {
+  transform: rotate(180deg);
+}
+
+.section-navigation.block .in-section-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--poc-off-white);
+  border: 1px solid var(--poc-light-grey);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 12%);
+  z-index: 300;
+}
+
+.section-navigation.block .in-section-dropdown.open {
+  display: block;
+}
+
+.section-navigation.block .in-section-dropdown a {
+  display: block;
+  padding: 10px 16px;
+  color: var(--poc-link-blue);
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px solid var(--poc-light-grey);
+}
+
+.section-navigation.block .in-section-dropdown a:last-child {
+  border-bottom: none;
+}
+
+.section-navigation.block .in-section-dropdown a:hover,
+.section-navigation.block .in-section-dropdown a:focus-visible {
+  background: var(--poc-light-purple);
+}
+
+/*
+ * The Sites component set scroll-behavior globally on html. Scoping it to the
+ * jump targets keeps the smooth scroll where it was wanted without changing
+ * every other anchor and script-driven scroll on the site.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .section.nav-section {
+    scroll-behavior: smooth;
+  }
+}
+
+/* A section that has opted in should not show a focus ring just for being
+   jumped to - it is a scroll target, not a control. */
+.section.nav-section:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-navigation.block .in-section-chevron {
+    transition: none;
+  }
+}

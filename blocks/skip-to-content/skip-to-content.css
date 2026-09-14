@@ -1,0 +1,218 @@
+/*
+ * Rule order in this file is deliberate. stylelint's no-descending-specificity
+ * requires that, for a given element, no lower-specificity selector appears
+ * after a higher one - so the global high-contrast rules for bare elements come
+ * first, then the block's own rules from base to state.
+ *
+ * High contrast reaches outside the block on purpose: the toggle lives here and
+ * sets the class on body, and this stylesheet only loads when the block is on
+ * the page.
+ */
+
+body.high-contrast {
+  background: #000;
+  color: #fff;
+}
+
+body.high-contrast a {
+  color: #ff0;
+}
+
+body.high-contrast h1,
+body.high-contrast h2,
+body.high-contrast h3,
+body.high-contrast h4,
+body.high-contrast p,
+body.high-contrast span,
+body.high-contrast li,
+body.high-contrast cite,
+body.high-contrast blockquote,
+body.high-contrast label,
+body.high-contrast td,
+body.high-contrast div {
+  color: var(--poc-off-white);
+}
+
+body.high-contrast header,
+body.high-contrast nav,
+body.high-contrast section,
+body.high-contrast footer,
+body.high-contrast .cat-card,
+body.high-contrast .story-card,
+body.high-contrast .info-card {
+  background: #000;
+}
+
+/* --- the bar ---------------------------------------------------------- */
+
+.skip-to-content.block {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  background-color: var(--poc-purple);
+  color: var(--poc-off-white);
+  box-sizing: border-box;
+}
+
+.skip-to-content.block .access-bar {
+  padding: 6px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--poc-off-white);
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.skip-to-content.block .access-left,
+.skip-to-content.block .access-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* --- the drop-down menu ----------------------------------------------- */
+
+.skip-to-content.block .skip-to {
+  position: relative;
+  display: inline-flex;
+}
+
+.skip-to-content.block .skip-to-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-top: 3px solid var(--poc-grayish-purple);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 12%);
+  z-index: 600;
+}
+
+body.high-contrast .skip-to-content.block .skip-to-menu {
+  background: #000;
+  border-color: #fff;
+}
+
+.skip-to-content.block .skip-to.open .skip-to-menu {
+  display: block;
+}
+
+/* --- links ------------------------------------------------------------ */
+
+.skip-to-content.block .skip-to-menu a,
+.skip-to-content.block .outline-label {
+  display: block;
+  padding: 10px 16px;
+  color: var(--poc-dark-grey);
+  text-decoration: none;
+  font-size: 13px;
+  border-bottom: 1px solid #eee;
+}
+
+.skip-to-content.block .access-bar a {
+  color: var(--poc-off-white);
+  text-decoration: none;
+}
+
+.skip-to-content.block .outline-label {
+  cursor: default;
+  font-weight: 700;
+}
+
+.skip-to-content.block .skip-to-menu a:last-child {
+  border-bottom: none;
+}
+
+.skip-to-content.block .access-bar a:hover,
+.skip-to-content.block .access-bar a:focus-visible {
+  text-decoration: underline;
+}
+
+.skip-to-content.block .skip-to-menu a:hover,
+.skip-to-content.block .skip-to-menu a:focus-visible {
+  background: var(--poc-pink-muted);
+  color: var(--poc-off-white);
+  text-decoration: none;
+}
+
+body.high-contrast .skip-to-content.block .skip-to-menu a {
+  color: #ff0;
+}
+
+body.high-contrast .skip-to-content.block .skip-to-menu a:hover {
+  background: #333;
+}
+
+/* --- buttons ---------------------------------------------------------- */
+
+.skip-to-content.block .font-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skip-to-content.block .font-btn,
+.skip-to-content.block .contrast-btn,
+.skip-to-content.block .skip-to-toggle {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--poc-off-white);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 0;
+}
+
+.skip-to-content.block .contrast-btn {
+  padding: 2px 8px;
+}
+
+body.high-contrast .skip-to-content.block .contrast-btn {
+  background: #fff;
+  color: #000;
+}
+
+/* The three size buttons are themselves sized small, normal and large. */
+.skip-to-content.block .font-btn {
+  font-weight: 700;
+}
+
+.skip-to-content.block .font-btn:nth-child(1) {
+  font-size: 11px;
+}
+
+.skip-to-content.block .font-btn:nth-child(2) {
+  font-size: 14px;
+}
+
+.skip-to-content.block .font-btn:nth-child(3) {
+  font-size: 17px;
+}
+
+/*
+ * The Sites component marked the active size with a class whose styling was
+ * entirely commented out, so it had no visible state at all. An underline is
+ * the least that shows which size is applied.
+ */
+.skip-to-content.block .font-btn.active {
+  text-decoration: underline;
+}
+
+.skip-to-content.block .skip-to-content-placeholder {
+  padding: 1rem;
+  color: var(--poc-off-white);
+  font-size: 0.875rem;
+}
+
+@media (width >= 576px) {
+  .skip-to-content.block {
+    width: 95vw;
+    margin-left: calc(50% - 47.5vw);
+    margin-right: calc(50% - 47.5vw);
+  }
+}

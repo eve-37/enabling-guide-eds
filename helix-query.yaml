@@ -14,3 +14,9 @@ indices:
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")
+      # Added for the breadcrumb block, which labels each ancestor from here
+      # rather than calling AEM. Verified to match the AEM page's jcr:title
+      # exactly on published pages.
+      title:
+        select: head > title
+        value: textContent(el)

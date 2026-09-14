@@ -1,0 +1,97 @@
+{
+  "definitions": [
+    {
+      "title": "Support Listing",
+      "id": "support-listing",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Support Listing",
+              "filter": "support-listing"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Support Card",
+      "id": "support-listing-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Support Card",
+              "model": "support-listing-item",
+              "image": "",
+              "imageAlt": "",
+              "title": "",
+              "description": "",
+              "ctaLink": "",
+              "ctaLinkText": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "support-listing-item",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "image",
+          "label": "Image",
+          "valueType": "string",
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Image alternative text",
+          "description": "Left empty, the card title is used - which is what the Sites component always did.",
+          "valueType": "string"
+        },
+        {
+          "component": "text",
+          "name": "title",
+          "label": "Title",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text-area",
+          "name": "description",
+          "label": "Description",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "aem-content",
+          "name": "ctaLink",
+          "label": "Call to Action",
+          "valueType": "string",
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "text",
+          "name": "ctaLinkText",
+          "label": "CTA Label",
+          "description": "Named ctaLinkText so it collapses into the link's own cell, keeping the card within the four-cell limit. The button appears only when both are set.",
+          "valueType": "string"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "support-listing",
+      "components": [
+        "support-listing-item"
+      ]
+    }
+  ]
+}

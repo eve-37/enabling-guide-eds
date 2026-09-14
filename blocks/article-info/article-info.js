@@ -27,14 +27,22 @@ function formatDate(date) {
 }
 
 /**
- * The same definition of a word WordCountUtil uses on the AEM side: strip
- * everything that is not alphanumeric or whitespace, then split on whitespace.
- * Keeping one definition matters - the related-articles cards show a count for
- * the same pages, and two rules would disagree with each other.
+ * One word: letters or digits, optionally joined by an apostrophe or hyphen, so
+ * "don't" and "well-known" count once each. \p{L} keeps accented and non-Latin
+ * letters, which a-zA-Z would have split or dropped.
+ *
+ * This is deliberately the same rule as WordCountUtil on the AEM side. The
+ * related-articles cards show a count for these same pages, and two definitions
+ * of a word would quietly disagree. Change one, change the other.
+ *
+ * Nothing strips tags or HTML entities here the way the Java does: these are DOM
+ * text nodes, so there is no markup left and the browser has already turned
+ * &nbsp; into U+00A0 - which is not a letter, so it separates words correctly.
  */
+const WORD = /[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu;
+
 function countWords(text) {
-  const cleaned = text.replace(/[^a-zA-Z0-9\s]/g, ' ').trim();
-  return cleaned ? cleaned.split(/\s+/).length : 0;
+  return (text.match(WORD) || []).length;
 }
 
 /**

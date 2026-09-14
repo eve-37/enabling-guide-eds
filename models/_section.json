@@ -33,6 +33,10 @@
             {
               "name": "Highlight",
               "value": "highlight"
+            },
+            {
+              "name": "In section navigation",
+              "value": "nav-section"
             }
           ]
         }
@@ -56,7 +60,22 @@
         "related-events",
         "event-fragment",
         "stories-listing",
-        "article-info"
+        "article-info",
+        "back-to-top",
+        "breadcrumb",
+        "column-control",
+        "content-header",
+        "cta-button",
+        "cta-teaser",
+        "event-listing",
+        "hero-carousel",
+        "my-guide",
+        "partner-offer",
+        "section-navigation",
+        "site-footer",
+        "site-header",
+        "skip-to-content",
+        "support-listing"
       ]
     }
   ]

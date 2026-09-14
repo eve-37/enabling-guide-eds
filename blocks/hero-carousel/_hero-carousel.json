@@ -1,0 +1,99 @@
+{
+  "definitions": [
+    {
+      "title": "Hero Carousel",
+      "id": "hero-carousel",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Hero Carousel",
+              "filter": "hero-carousel"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Carousel Slide",
+      "id": "hero-carousel-slide",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Carousel Slide",
+              "model": "hero-carousel-slide",
+              "image": "",
+              "imageAlt": "",
+              "heading": "",
+              "subtitle": "",
+              "ctaLink": "",
+              "ctaLinkText": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hero-carousel-slide",
+      "fields": [
+        {
+          "component": "reference",
+          "name": "image",
+          "label": "Background Image",
+          "valueType": "string",
+          "required": true,
+          "multi": false
+        },
+        {
+          "component": "text",
+          "name": "imageAlt",
+          "label": "Image Alt Text",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text",
+          "name": "heading",
+          "label": "Heading",
+          "valueType": "string",
+          "required": true
+        },
+        {
+          "component": "text",
+          "name": "subtitle",
+          "label": "Subtitle",
+          "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "ctaLink",
+          "label": "CTA Link",
+          "valueType": "string",
+          "required": true,
+          "rootPath": "/content/enabling-guide-eds"
+        },
+        {
+          "component": "text",
+          "name": "ctaLinkText",
+          "label": "CTA Text",
+          "description": "Named ctaLinkText, not ctaText, so it collapses into the CTA link's own cell - a slide is capped at four cells.",
+          "valueType": "string",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "hero-carousel",
+      "components": [
+        "hero-carousel-slide"
+      ]
+    }
+  ]
+}
