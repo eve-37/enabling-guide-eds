@@ -6,6 +6,11 @@ indices:
       - '/**'
     exclude:
       - '/**.json'
+      # Fragment pages mounted by the header and footer blocks. They are not
+      # pages in their own right, so keep them out of the index and, through it,
+      # out of sitemap.xml and any listing block that reads query-index.
+      - '/nav'
+      - '/footer'
     target: /query-index.json
     properties:
       lastModified:
