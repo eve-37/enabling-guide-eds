@@ -165,24 +165,46 @@ function buildTopNav(sections, here) {
   return nav;
 }
 
-/** A row holding both a link and a label is one of the authored top-bar items. */
-function isLinkRow(row) {
-  if (row.children.length > 1) return true;
-  return Boolean(row.querySelector('a[href]'));
+/**
+ * Splits the block's own fields from the authored Header Link items.
+ *
+ * The model orders the block's fields navigationRoot, logo, logoAlt, logoLink. logoAlt is
+ * rendered as the alt attribute of the image it names and gets no row of its own, so the
+ * block owns three rows and every row after them is a Header Link item.
+ *
+ * The boundary has to be found by content - the row holding the picture - because the two
+ * path fields cannot be told apart from item rows structurally. AEM renders an aem-content
+ * pathfield as an <a href>, so testing a row for an anchor classifies navigationRoot and
+ * logoLink as items: they render as nav links showing their raw /content/ path, and both
+ * fields silently fall back to '/' because nothing is left to read them from.
+ */
+function readRows(block) {
+  const rows = [...block.children];
+  const logoIndex = rows.findIndex((row) => row.querySelector('picture, img'));
+
+  // With no logo authored there is no picture to anchor on, but the two path fields are
+  // still the block's own leading rows.
+  const ownCount = logoIndex === -1 ? 2 : logoIndex + 2;
+
+  return {
+    navigationRootRow: (logoIndex === -1 ? rows[0] : rows[logoIndex - 1]) || null,
+    logoRow: logoIndex === -1 ? null : rows[logoIndex],
+    logoLinkRow: rows[ownCount - 1] || null,
+    itemRows: rows.slice(ownCount, ownCount + MAX_HEADING_ITEMS),
+  };
 }
 
 export default function decorate(block) {
-  const rows = [...block.children];
-  const itemRows = rows.filter(isLinkRow).slice(0, MAX_HEADING_ITEMS);
-  const ownRows = rows.filter((row) => !isLinkRow(row));
+  const {
+    navigationRootRow, logoRow, logoLinkRow, itemRows,
+  } = readRows(block);
 
-  const logoRow = ownRows.find((row) => row.querySelector('picture, img'));
-  const pathRows = ownRows.filter((row) => row !== logoRow);
-
+  // navigationRoot reads the cell's text, not its href: AEM rewrites the anchor's href on
+  // this field while leaving the authored path as the link text.
   const navigationRoot = toEdsPath(readTextFromCell(
-    pathRows[0] ? pathRows[0].firstElementChild : null,
+    navigationRootRow ? navigationRootRow.firstElementChild : null,
   )) || '/';
-  const logoLink = readLinkFromCell(pathRows[1] ? pathRows[1].firstElementChild : null) || '/';
+  const logoLink = readLinkFromCell(logoLinkRow ? logoLinkRow.firstElementChild : null) || '/';
   const picture = logoRow ? logoRow.querySelector('picture, img') : null;
 
   const here = window.location.pathname.replace(/\/$/, '') || '/';
